@@ -2,6 +2,8 @@
 require 'colorize'
 
 class Piece
+  attr_reader :symbol
+
   def initialize(color)
     @move_count = 0
     @color = color
