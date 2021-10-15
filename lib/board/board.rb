@@ -1,13 +1,18 @@
 require 'require_all'
-require_rel 'pieces'
+require_rel '../pieces'
 require_rel 'square'
 
 class Board
   attr_reader :positions
 
   SIZE = 8
+  WHITE = :white
+  BLACK = :black
+
   LIGHT_SQUARE = :on_light_yellow
   DARK_SQUARE = :on_yellow
+  CAPTURE_SQAURE = :on_red
+  MOVE_MARKER = "\u25CF".blue
 
   FIRST_RANK = [Rook, Knight, Bishop, Queen, King, Bishop, Knight, Rook].freeze
   SECOND_RANK = Array.new(SIZE, Pawn).freeze
@@ -34,13 +39,13 @@ class Board
 
   def populate_pieces
     FIRST_RANK.each_with_index do |piece, index|
-      @positions[0][index].occupant = piece.new('B')
-      @positions[-1][index].occupant = piece.new('W')
+      @positions[0][index].occupant = piece.new(BLACK)
+      @positions[-1][index].occupant = piece.new(WHITE)
     end
 
     SECOND_RANK.each_with_index do |piece, index|
-      @positions[1][index].occupant = piece.new('B')
-      @positions[-2][index].occupant = piece.new('W')
+      @positions[1][index].occupant = piece.new(BLACK)
+      @positions[-2][index].occupant = piece.new(WHITE)
     end
   end
 
