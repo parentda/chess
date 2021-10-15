@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 require 'require_all'
 require_rel 'pieces'
 require_rel 'square'
@@ -39,5 +38,14 @@ class Board
       @positions[1][index].occupant = piece.new('B')
       @positions[-2][index].occupant = piece.new('W')
     end
+  end
+
+  def display
+    output = ''
+    @positions.each do |row|
+      row.each { |square| output << square.to_string }
+      output << "\n"
+    end
+    output
   end
 end
