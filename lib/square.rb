@@ -2,12 +2,14 @@
 require 'colorize'
 
 class Square
-  def initialize(background_color, symbol = ' ')
-    @symbol = symbol
+  attr_accessor :occupant
+
+  def initialize(background_color, occupant = ' ')
+    @occupant = occupant
     @background_color = background_color
   end
 
   def to_string
-    @symbol.to_s.send(@background_color)
+    @occupant.to_s.send(@background_color)
   end
 end
