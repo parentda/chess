@@ -18,12 +18,15 @@ class Board
   end
 
   def populate_grid
-    count = 1
     @positions.each_with_index do |row, i|
       row.each_with_index do |_square, j|
-        @positions[i][j] =
-          count.odd? ? Square.new(LIGHT_SQUARE) : Square.new(DARK_SQUARE)
-        count += 1
+        if i.even?
+          @positions[i][j] =
+            j.even? ? Square.new(LIGHT_SQUARE) : Square.new(DARK_SQUARE)
+        else
+          @positions[i][j] =
+            j.odd? ? Square.new(LIGHT_SQUARE) : Square.new(DARK_SQUARE)
+        end
       end
     end
   end
