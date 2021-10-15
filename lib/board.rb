@@ -8,6 +8,7 @@ class Board
   SIZE = 8
   LIGHT_SQUARE = :on_light_yellow
   DARK_SQUARE = :on_yellow
+
   FIRST_RANK = [Rook, Knight, Bishop, Queen, King, Bishop, Knight, Rook].freeze
   SECOND_RANK = Array.new(SIZE, Pawn).freeze
 
@@ -45,10 +46,14 @@ class Board
 
   def display
     output = ''
-    @positions.each do |row|
+    @positions.each_with_index do |row, i|
+      output << "\t#{SIZE - i} "
       row.each { |square| output << square.to_string }
       output << "\n"
     end
-    output
+    output << "\t  "
+    ('a'..'h').each { |letter| output << " #{letter} " }
+    system 'clear'
+    puts output
   end
 end
