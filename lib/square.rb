@@ -10,6 +10,6 @@ class Square
   end
 
   def to_string
-    @occupant.to_s.send(@background_color)
+    " #{@occupant.to_s} ".send(@background_color)
   end
 end
