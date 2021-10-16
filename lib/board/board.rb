@@ -75,6 +75,8 @@ class Board
   end
 
   def valid_input?(string)
-    string.match?(/[A-Ha-h][1-8]/)
+    return false unless string.length == 2
+
+    string.match?(/[a-h][1-8]/i)
   end
 end
