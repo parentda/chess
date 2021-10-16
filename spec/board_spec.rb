@@ -33,4 +33,16 @@ describe Board do
       end
     end
   end
+
+  describe '#convert_input' do
+    context 'when input is valid' do
+      it 'returns correct coordinate array' do
+        expect(board.convert_input('a8')).to eq [2, 2]
+        expect(board.convert_input('A8')).to eq [2, 2]
+        expect(board.convert_input('a1')).to eq [9, 2]
+        expect(board.convert_input('h8')).to eq [2, 9]
+        expect(board.convert_input('h1')).to eq [9, 9]
+      end
+    end
+  end
 end
