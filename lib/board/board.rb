@@ -85,4 +85,8 @@ class Board
     col = (string[0].downcase.ord - 97) + 2
     [row, col]
   end
+
+  def valid_selection(coords, valid_choice_list)
+    valid_choice_list.include?(coords)
+  end
 end
