@@ -21,6 +21,7 @@ class Board
     @positions = Array.new(SIZE) { Array.new(SIZE) }
     populate_grid
     populate_pieces
+    add_sentinels
   end
 
   def populate_grid
@@ -49,16 +50,31 @@ class Board
     end
   end
 
+  def add_sentinels
+    @positions.each do |row|
+      2.times { row.unshift(nil) }
+      2.times { row.push(nil) }
+    end
+    2.times { @positions.unshift(Array.new(SIZE + 4)) }
+    2.times { @positions.push(Array.new(SIZE + 4)) }
+  end
+
   def display
     output = ''
     @positions.each_with_index do |row, i|
-      output << "\t#{SIZE - i} "
-      row.each { |square| output << square.to_string }
+      next if row[2].nil?
+
+      output << "\t#{SIZE + 2 - i} "
+      row.each { |square| output << square.to_string unless square.nil? }
       output << "\n"
     end
     output << "\t  "
     ('a'..'h').each { |letter| output << " #{letter} " }
     system 'clear'
     puts output
+  end
+
+  def valid_input?(string)
+    string.match?(/[A-Ha-h][1-8]/)
   end
 end
