@@ -2,16 +2,10 @@
 require 'colorize'
 
 class Piece
-  @@symbol = nil
-
   def initialize(color)
     @move_count = 0
     @color = color
     move_set
-  end
-
-  def symbol
-    @@symbol
   end
 
   def to_s

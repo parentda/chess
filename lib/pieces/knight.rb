@@ -12,4 +12,8 @@ class Knight < Piece
         .reject { |pair| pair[0].abs == pair[1].abs }
         .map { |pair| [pair] }
   end
+
+  def symbol
+    @@symbol
+  end
 end

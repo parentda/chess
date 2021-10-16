@@ -3,7 +3,7 @@ require_relative 'piece'
 
 class Rook < Piece
   @@movement = [-1, 0, 1]
-  @symbol = "\u265C"
+  @@symbol = "\u265C"
 
   def move_set
     @@move_set ||=
@@ -15,5 +15,9 @@ class Rook < Piece
           (2..7).each { |i| move_list << pair.map { |n| n * i } }
           move_list
         end
+  end
+
+  def symbol
+    @@symbol
   end
 end

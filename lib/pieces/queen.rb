@@ -16,4 +16,8 @@ class Queen < Piece
           move_list
         end
   end
+
+  def symbol
+    @@symbol
+  end
 end

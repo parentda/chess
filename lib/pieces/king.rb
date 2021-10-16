@@ -12,4 +12,8 @@ class King < Piece
         .reject { |pair| pair == [0, 0] }
         .map { |pair| [pair] }
   end
+
+  def symbol
+    @@symbol
+  end
 end
