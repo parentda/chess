@@ -3,13 +3,9 @@ require_relative 'piece'
 
 class Queen < Piece
   @@movement = [-1, 0, 1]
+  @@symbol = "\u265B"
 
-  def initialize(color)
-    super
-    @symbol = "\u265B"
-  end
-
-  def self.move_set
+  def move_set
     @@move_set ||=
       @@movement
         .repeated_permutation(2)

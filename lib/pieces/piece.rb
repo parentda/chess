@@ -2,14 +2,19 @@
 require 'colorize'
 
 class Piece
-  attr_reader :symbol
+  @@symbol = nil
 
   def initialize(color)
     @move_count = 0
     @color = color
+    move_set
   end
 
-  def to_string
-    @color == 'W' ? @symbol.white : @symbol.black
+  def symbol
+    @@symbol
+  end
+
+  def to_s
+    @color == :white ? symbol.white : symbol.black
   end
 end

@@ -3,13 +3,9 @@ require_relative 'piece'
 
 class Bishop < Piece
   @@movement = [-1, 0, 1]
+  @@symbol = "\u265D"
 
-  def initialize(color)
-    super
-    @symbol = "\u265D"
-  end
-
-  def self.move_set
+  def move_set
     @@move_set ||=
       @@movement
         .repeated_permutation(2)

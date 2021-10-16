@@ -3,13 +3,9 @@ require_relative 'piece'
 
 class Knight < Piece
   @@movement = [2, 1, -1, -2]
+  @@symbol = "\u265E"
 
-  def initialize(color)
-    super
-    @symbol = "\u265E"
-  end
-
-  def self.move_set
+  def move_set
     @@move_set ||=
       @@movement
         .permutation(2)
