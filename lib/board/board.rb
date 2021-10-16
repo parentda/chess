@@ -79,4 +79,10 @@ class Board
 
     string.match?(/[a-h][1-8]/i)
   end
+
+  def convert_input(string)
+    row = 10 - string[1].to_i
+    col = (string[0].downcase.ord - 97) + 2
+    [row, col]
+  end
 end
