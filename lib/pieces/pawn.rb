@@ -6,15 +6,26 @@ class Pawn < Piece
   @@symbol = "\u265F"
 
   def move_set
-    @@move_set ||=
-      @@movement
-        .repeated_permutation(2)
-        .reject { |pair| pair[1].zero? }
-        .map do |pair|
-          move_list = [pair]
-          move_list << pair.map { |n| n * 2 } if pair[0].zero?
-          move_list
-        end
+    @move_set ||=
+      if @color == :black
+        @@movement
+          .repeated_permutation(2)
+          .reject { |pair| pair[0] <= 0 }
+          .map do |pair|
+            move_list = [pair]
+            move_list << pair.map { |n| n * 2 } if pair[1].zero?
+            move_list
+          end
+      else
+        @@movement
+          .repeated_permutation(2)
+          .reject { |pair| pair[0] >= 0 }
+          .map do |pair|
+            move_list = [pair]
+            move_list << pair.map { |n| n * 2 } if pair[1].zero?
+            move_list
+          end
+      end
   end
 
   def symbol
