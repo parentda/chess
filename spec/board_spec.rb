@@ -10,38 +10,28 @@ describe Board do
 
   describe '#valid_input?' do
     context 'when given a valid input' do
+      inputs = %w[a1 A1 h8 H8]
       it 'returns true' do
-        expect(board.valid_input?('a1')).to be true
-        expect(board.valid_input?('A1')).to be true
-        expect(board.valid_input?('h8')).to be true
-        expect(board.valid_input?('H8')).to be true
+        inputs.each { |input| expect(board.valid_input?(input)).to be true }
       end
     end
 
     context 'when given an invalid input' do
+      inputs = %w[a0 A9 i8 I8 a11 Aa1 1a 12a aa 11]
       it 'returns false' do
-        expect(board.valid_input?('a0')).to be false
-        expect(board.valid_input?('A9')).to be false
-        expect(board.valid_input?('i8')).to be false
-        expect(board.valid_input?('I8')).to be false
-        expect(board.valid_input?('a11')).to be false
-        expect(board.valid_input?('Aa1')).to be false
-        expect(board.valid_input?('1a')).to be false
-        expect(board.valid_input?('12a')).to be false
-        expect(board.valid_input?('aa')).to be false
-        expect(board.valid_input?('11')).to be false
+        inputs.each { |input| expect(board.valid_input?(input)).to be false }
       end
     end
   end
 
   describe '#convert_input' do
     context 'when input is valid' do
+      inputs = %w[a8 A8 a1 h8 h1]
+      outputs = [[2, 2], [2, 2], [9, 2], [2, 9], [9, 9]]
       it 'returns correct coordinate array' do
-        expect(board.convert_input('a8')).to eq [2, 2]
-        expect(board.convert_input('A8')).to eq [2, 2]
-        expect(board.convert_input('a1')).to eq [9, 2]
-        expect(board.convert_input('h8')).to eq [2, 9]
-        expect(board.convert_input('h1')).to eq [9, 9]
+        inputs.each_with_index do |input, i|
+          expect(board.convert_input(input)).to eq outputs[i]
+        end
       end
     end
   end
