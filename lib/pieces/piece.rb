@@ -10,6 +10,12 @@ class Piece
     move_set
   end
 
+  def self.move_set; end
+
+  def move_set
+    self.class.move_set
+  end
+
   def to_s
     @color == :white ? symbol.white : symbol.black
   end
