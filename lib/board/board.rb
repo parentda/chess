@@ -3,7 +3,7 @@ require_rel '../pieces'
 require_rel 'square'
 
 class Board
-  attr_reader :positions
+  attr_accessor :positions
 
   SIZE = 8
   WHITE = :white
@@ -11,7 +11,7 @@ class Board
 
   LIGHT_SQUARE = :on_light_yellow
   DARK_SQUARE = :on_yellow
-  CAPTURE_SQAURE = :on_red
+  CAPTURE_SQUARE = :on_red
   MOVE_MARKER = "\u25CF".blue
 
   FIRST_RANK = [Rook, Knight, Bishop, Queen, King, Bishop, Knight, Rook].freeze
@@ -88,5 +88,33 @@ class Board
 
   def valid_selection(coords, valid_choice_list)
     valid_choice_list.include?(coords)
+  end
+
+  def pseudo_legal_moves(coords)
+    moves_list = []
+
+    piece = @positions[coords[0]][coords[1]].occupant
+    piece_color = piece.color
+
+    piece.move_set.each do |direction|
+      direction.each do |shift|
+        p shift
+        move = [coords[0] + shift[0], coords[1] + shift[1]]
+        new_square = @positions[move[0]][move[1]]
+
+        break if new_square.nil?
+
+        if new_square.occupant.is_a?(Piece)
+          moves_list << move unless new_square.occupant.color == piece_color
+          break
+        end
+
+        moves_list << move
+      end
+    end
+
+    moves_list.each do |move|
+      @positions[move[0]][move[1]].background_color = CAPTURE_SQUARE
+    end
   end
 end
