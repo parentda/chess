@@ -5,7 +5,7 @@ class King < Piece
   @@movement = [-1, 0, 1]
   @@symbol = "\u265A"
 
-  def move_set
+  def self.move_set
     @@move_set ||=
       @@movement
         .repeated_permutation(2)

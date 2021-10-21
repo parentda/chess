@@ -5,7 +5,7 @@ class Knight < Piece
   @@movement = [2, 1, -1, -2]
   @@symbol = "\u265E"
 
-  def move_set
+  def self.move_set
     @@move_set ||=
       @@movement
         .permutation(2)

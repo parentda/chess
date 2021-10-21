@@ -5,7 +5,7 @@ class Pawn < Piece
   @@movement = [-1, 0, 1]
   @@symbol = "\u265F"
 
-  def move_set
+  def self.move_set
     @move_set ||=
       if @color == :black
         @@movement
