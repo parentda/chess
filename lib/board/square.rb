@@ -2,7 +2,7 @@
 require 'colorize'
 
 class Square
-  attr_accessor :occupant
+  attr_accessor :occupant, :background_color
 
   def initialize(background_color, occupant = ' ')
     @occupant = occupant
