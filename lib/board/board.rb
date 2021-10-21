@@ -14,6 +14,7 @@ class Board
   CAPTURE_SQUARE = :on_red
   MOVE_MARKER = "\u25CF".blue
 
+  PIECE_TYPES = [Queen, Rook, Bishop, Knight, Pawn, King].freeze
   FIRST_RANK = [Rook, Knight, Bishop, Queen, King, Bishop, Knight, Rook].freeze
   SECOND_RANK = Array.new(SIZE, Pawn).freeze
 
@@ -113,8 +114,29 @@ class Board
       end
     end
 
-    moves_list.each do |move|
-      @positions[move[0]][move[1]].background_color = CAPTURE_SQUARE
+    # moves_list.each do |move|
+    #   @positions[move[0]][move[1]].background_color = CAPTURE_SQUARE
+    # end
+
+    moves_list
+  end
+
+  def attacked_by?(coords, piece_type, piece_color)
+    piece_type.move_set.each do |direction|
+      direction.each do |shift|
+        p shift
+        move = [coords[0] + shift[0], coords[1] + shift[1]]
+        new_square = @positions[move[0]][move[1]]
+
+        break if new_square.nil?
+
+        next unless new_square.occupant.is_a?(Piece)
+
+        break if new_square.occupant.color != piece_color
+
+        new_square.occupant.is_a?(piece_type) ? (return true) : break
+      end
     end
+    false
   end
 end
