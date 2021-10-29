@@ -71,7 +71,8 @@ class Board
     end
     output << "\t  "
     ('a'..'h').each { |letter| output << " #{letter} " }
-    system 'clear'
+
+    # system 'clear'
     puts output
   end
 
@@ -124,7 +125,6 @@ class Board
   def attacked_by?(coords, piece_type, piece_color)
     piece_type.move_set.each do |direction|
       direction.each do |shift|
-        p shift
         move = [coords[0] + shift[0], coords[1] + shift[1]]
         new_square = @positions[move[0]][move[1]]
 
@@ -132,7 +132,7 @@ class Board
 
         next unless new_square.occupant.is_a?(Piece)
 
-        break if new_square.occupant.color != piece_color
+        break unless new_square.occupant.color == piece_color
 
         new_square.occupant.is_a?(piece_type) ? (return true) : break
       end
