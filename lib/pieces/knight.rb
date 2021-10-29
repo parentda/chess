@@ -4,6 +4,7 @@ require_relative 'piece'
 class Knight < Piece
   @@movement = [2, 1, -1, -2]
   @@symbol = "\u265E"
+  @@value = 3
 
   def self.move_set
     @@move_set ||=
@@ -15,5 +16,9 @@ class Knight < Piece
 
   def symbol
     @@symbol
+  end
+
+  def value
+    @@value
   end
 end
