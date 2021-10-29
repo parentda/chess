@@ -20,9 +20,10 @@ class Board
 
   def initialize
     @positions = Array.new(SIZE) { Array.new(SIZE) }
-    @piece_list = { white: [], black: [] }
+    @piece_list = { WHITE => [], BLACK => [] }
     populate_grid
     populate_pieces
+    sort_piece_lists
     add_sentinels
   end
 
@@ -64,28 +65,12 @@ class Board
       row_offset += 1
       col_offset -= 1
     end
+  end
 
-    # FIRST_RANK.each_with_index do |piece, index|
-    #   black_piece = piece.new(BLACK)
-    #   white_piece = piece.new(WHITE)
-
-    #   @positions[0][index].occupant = black_piece
-    #   @positions[-1][index].occupant = white_piece
-
-    #   @piece_list[BLACK] << { piece: black_piece, position: [2, index] }
-    #   @piece_list[WHITE] << { piece: white_piece, position: [9, index] }
-    # end
-
-    # SECOND_RANK.each_with_index do |piece, index|
-    #   black_piece = piece.new(BLACK)
-    #   white_piece = piece.new(WHITE)
-
-    #   @positions[1][index].occupant = black_piece
-    #   @positions[-2][index].occupant = white_piece
-
-    #   @piece_list[BLACK] << { piece: black_piece, position: [3, index] }
-    #   @piece_list[WHITE] << { piece: white_piece, position: [8, index] }
-    # end
+  def sort_piece_lists
+    @piece_list.each_value do |list|
+      list.sort! { |a, b| b[:piece].value <=> a[:piece].value }
+    end
   end
 
   def add_sentinels
