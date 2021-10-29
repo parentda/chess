@@ -4,6 +4,7 @@ require_relative 'piece'
 class King < Piece
   @@movement = [-1, 0, 1]
   @@symbol = "\u265A"
+  @@value = Float::INFINITY
 
   def self.move_set
     @@move_set ||=
@@ -15,5 +16,9 @@ class King < Piece
 
   def symbol
     @@symbol
+  end
+
+  def value
+    @@value
   end
 end
