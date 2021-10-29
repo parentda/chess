@@ -4,6 +4,7 @@ require_relative 'piece'
 class Bishop < Piece
   @@movement = [-1, 0, 1]
   @@symbol = "\u265D"
+  @@value = 3
 
   def self.move_set
     @@move_set ||=
@@ -19,5 +20,9 @@ class Bishop < Piece
 
   def symbol
     @@symbol
+  end
+
+  def value
+    @@value
   end
 end
