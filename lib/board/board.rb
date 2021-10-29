@@ -3,7 +3,7 @@ require_rel '../pieces'
 require_rel 'square'
 
 class Board
-  attr_accessor :positions
+  attr_accessor :positions, :piece_list
 
   SIZE = 8
   WHITE = :white
@@ -20,6 +20,7 @@ class Board
 
   def initialize
     @positions = Array.new(SIZE) { Array.new(SIZE) }
+    @piece_list = { white: [], black: [] }
     populate_grid
     populate_pieces
     add_sentinels
@@ -40,15 +41,51 @@ class Board
   end
 
   def populate_pieces
-    FIRST_RANK.each_with_index do |piece, index|
-      @positions[0][index].occupant = piece.new(BLACK)
-      @positions[-1][index].occupant = piece.new(WHITE)
+    row_offset = 0
+    col_offset = -1
+
+    [FIRST_RANK, SECOND_RANK].each do |rank|
+      rank.each_with_index do |piece, index|
+        black_piece = piece.new(BLACK)
+        white_piece = piece.new(WHITE)
+
+        @positions[row_offset][index].occupant = black_piece
+        @positions[col_offset][index].occupant = white_piece
+
+        @piece_list[BLACK] << {
+          piece: black_piece,
+          position: [2 + row_offset, 2 + index]
+        }
+        @piece_list[WHITE] << {
+          piece: white_piece,
+          position: [10 + col_offset, 2 + index]
+        }
+      end
+      row_offset += 1
+      col_offset -= 1
     end
 
-    SECOND_RANK.each_with_index do |piece, index|
-      @positions[1][index].occupant = piece.new(BLACK)
-      @positions[-2][index].occupant = piece.new(WHITE)
-    end
+    # FIRST_RANK.each_with_index do |piece, index|
+    #   black_piece = piece.new(BLACK)
+    #   white_piece = piece.new(WHITE)
+
+    #   @positions[0][index].occupant = black_piece
+    #   @positions[-1][index].occupant = white_piece
+
+    #   @piece_list[BLACK] << { piece: black_piece, position: [2, index] }
+    #   @piece_list[WHITE] << { piece: white_piece, position: [9, index] }
+    # end
+
+    # SECOND_RANK.each_with_index do |piece, index|
+    #   black_piece = piece.new(BLACK)
+    #   white_piece = piece.new(WHITE)
+
+    #   @positions[1][index].occupant = black_piece
+    #   @positions[-2][index].occupant = white_piece
+
+    #   @piece_list[BLACK] << { piece: black_piece, position: [3, index] }
+    #   @piece_list[WHITE] << { piece: white_piece, position: [8, index] }
+    # end
   end
 
   def add_sentinels
@@ -72,7 +109,7 @@ class Board
     output << "\t  "
     ('a'..'h').each { |letter| output << " #{letter} " }
 
-    # system 'clear'
+    system 'clear'
     puts output
   end
 
@@ -139,4 +176,6 @@ class Board
     end
     false
   end
+
+  def check?(color); end
 end
