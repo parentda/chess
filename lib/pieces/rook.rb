@@ -4,6 +4,7 @@ require_relative 'piece'
 class Rook < Piece
   @@movement = [-1, 0, 1]
   @@symbol = "\u265C"
+  @@value = 5
 
   def self.move_set
     @@move_set ||=
@@ -19,5 +20,9 @@ class Rook < Piece
 
   def symbol
     @@symbol
+  end
+
+  def value
+    @@value
   end
 end
