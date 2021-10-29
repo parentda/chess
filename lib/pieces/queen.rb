@@ -4,6 +4,7 @@ require_relative 'piece'
 class Queen < Piece
   @@movement = [-1, 0, 1]
   @@symbol = "\u265B"
+  @@value = 9
 
   def self.move_set
     @@move_set ||=
@@ -19,5 +20,9 @@ class Queen < Piece
 
   def symbol
     @@symbol
+  end
+
+  def value
+    @@value
   end
 end
