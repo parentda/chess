@@ -6,8 +6,7 @@ class Board
   attr_accessor :positions, :piece_list
 
   SIZE = 8
-  WHITE = :white
-  BLACK = :black
+  COLORS = %i[white black].freeze
 
   LIGHT_SQUARE = :on_light_yellow
   DARK_SQUARE = :on_yellow
@@ -20,7 +19,7 @@ class Board
 
   def initialize
     @positions = Array.new(SIZE) { Array.new(SIZE) }
-    @piece_list = { WHITE => [], BLACK => [] }
+    @piece_list = { COLORS[0] => [], COLORS[1] => [] }
     populate_grid
     populate_pieces
     sort_piece_lists
@@ -47,17 +46,17 @@ class Board
 
     [FIRST_RANK, SECOND_RANK].each do |rank|
       rank.each_with_index do |piece, index|
-        black_piece = piece.new(BLACK)
-        white_piece = piece.new(WHITE)
+        black_piece = piece.new(COLORS[1])
+        white_piece = piece.new(COLORS[0])
 
         @positions[row_offset][index].occupant = black_piece
         @positions[col_offset][index].occupant = white_piece
 
-        @piece_list[BLACK] << {
+        @piece_list[COLORS[1]] << {
           piece: black_piece,
           position: [2 + row_offset, 2 + index]
         }
-        @piece_list[WHITE] << {
+        @piece_list[COLORS[0]] << {
           piece: white_piece,
           position: [10 + col_offset, 2 + index]
         }
@@ -144,7 +143,7 @@ class Board
     moves_list
   end
 
-  def attacked_by?(coords, piece_type, piece_color)
+  def attacked_by?(coords, piece_type, attacking_color)
     piece_type.move_set.each do |direction|
       direction.each do |shift|
         move = [coords[0] + shift[0], coords[1] + shift[1]]
@@ -154,7 +153,7 @@ class Board
 
         next unless new_square.occupant.is_a?(Piece)
 
-        break unless new_square.occupant.color == piece_color
+        break unless new_square.occupant.color == attacking_color
 
         new_square.occupant.is_a?(piece_type) ? (return true) : break
       end
@@ -162,5 +161,13 @@ class Board
     false
   end
 
-  def check?(color); end
+  def check?(attacking_color, defending_color)
+    king_position = @piece_list[defending_color][0][:position]
+
+    PIECE_TYPES.any? do |piece_type|
+      attacked_by?(king_position, piece_type, attacking_color)
+    end
+  end
 end
+
+# attacking_color = COLORS.find { |color| color != defending_color }
