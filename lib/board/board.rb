@@ -1,6 +1,7 @@
 require 'require_all'
 require_rel '../pieces'
 require_rel 'square'
+require_rel '../move'
 
 class Board
   attr_accessor :positions, :piece_list
@@ -20,6 +21,11 @@ class Board
   def initialize
     @positions = Array.new(SIZE) { Array.new(SIZE) }
     @piece_list = { COLORS[0] => [], COLORS[1] => [] }
+    @moves_list = []
+    setup
+  end
+
+  def setup
     populate_grid
     populate_pieces
     sort_piece_lists
@@ -114,25 +120,26 @@ class Board
   end
 
   def pseudo_legal_moves(coords)
-    moves_list = []
+    pseudo_legal_moves_list = []
 
     piece = @positions[coords[0]][coords[1]].occupant
     piece_color = piece.color
 
     piece.move_set.each do |direction|
       direction.each do |shift|
-        p shift
         move = [coords[0] + shift[0], coords[1] + shift[1]]
         new_square = @positions[move[0]][move[1]]
 
         break if new_square.nil?
 
         if new_square.occupant.is_a?(Piece)
-          moves_list << move unless new_square.occupant.color == piece_color
+          unless new_square.occupant.color == piece_color
+            pseudo_legal_moves_list << move
+          end
           break
         end
 
-        moves_list << move
+        pseudo_legal_moves_list << move
       end
     end
 
@@ -140,7 +147,19 @@ class Board
     #   @positions[move[0]][move[1]].background_color = CAPTURE_SQUARE
     # end
 
-    moves_list
+    pseudo_legal_moves_list
+  end
+
+  def legal_moves(pseudo_legal_moves_list)
+    legal_moves_list = []
+
+    pseudo_legal_moves.each do |move|
+      make_move
+      check?
+      undo_move
+    end
+
+    legal_moves_list
   end
 
   def attacked_by?(coords, piece_type, attacking_color)
