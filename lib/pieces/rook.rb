@@ -18,6 +18,10 @@ class Rook < Piece
         end
   end
 
+  class << self
+    alias capture_set move_set
+  end
+
   def symbol
     @@symbol
   end

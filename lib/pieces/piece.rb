@@ -16,6 +16,8 @@ class Piece
     self.class.move_set
   end
 
+  alias capture_set move_set
+
   def to_s
     @color == :white ? symbol.white : symbol.black
   end

@@ -14,6 +14,10 @@ class King < Piece
         .map { |pair| [pair] }
   end
 
+  class << self
+    alias capture_set move_set
+  end
+
   def symbol
     @@symbol
   end
