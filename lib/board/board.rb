@@ -153,20 +153,35 @@ class Board
     pseudo_legal_moves_list
   end
 
+  def special_movement(coords, piece_type)
+    special_moves = []
+
+    case piece_type
+    when Pawn
+      %i[
+        en_passant_availability
+        pawn_capture_availability
+        pawn_double_step_availability
+      ].each do |method|
+        send(method, coords).each { |move| special_moves << move }
+      end
+    when King
+      castle_availability(coords).each { |move| special_moves << move }
+    end
+
+    special_moves
+  end
+
   def legal_moves(coords, pseudo_legal_moves_list)
     legal_moves_list = []
 
-    pseudo_legal_moves.each do |move|
+    pseudo_legal_moves_list.each do |move|
       make_move
-      check?
+      legal_moves_list << move unless check?
       undo_move
     end
 
     legal_moves_list
-  end
-
-  def special_movement(coords, piece_type)
-    return row, col, special_case
   end
 
   def create_move(start_position, end_position); end
@@ -207,19 +222,19 @@ class Board
 
   def stalemate?(attacking_color, defending_color); end
 
-  def castling_available?; end
+  def castle_availability(coords); end
 
-  def castling; end
+  def castle; end
 
-  def en_passant_available?; end
+  def en_passant_availability(coords); end
 
   def en_passant; end
 
-  def pawn_capture_available?; end
+  def pawn_capture_availability(coords); end
 
   def pawn_capture; end
 
-  def pawn_double_step_available?; end
+  def pawn_double_step_availability(coords); end
 
   def pawn_double_step; end
 
