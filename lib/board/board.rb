@@ -119,16 +119,11 @@ class Board
     valid_choice_list.include?(coords)
   end
 
-  def create_move(start_position, end_position); end
-
-  def make_move(start_position, end_position, special_case); end
-
-  def undo_move; end
-
   def pseudo_legal_moves(coords)
     pseudo_legal_moves_list = []
 
     piece = @positions[coords[0]][coords[1]].occupant
+    piece_type = piece.class
     piece_color = piece.color
 
     piece.move_set.each do |direction|
@@ -149,9 +144,11 @@ class Board
       end
     end
 
-    # moves_list.each do |move|
-    #   @positions[move[0]][move[1]].background_color = CAPTURE_SQUARE
-    # end
+    special_moves = special_movement(coords, piece_type) if [
+      Pawn,
+      King
+    ].include?(piece_type)
+    special_moves.each { |move| pseudo_legal_moves_list << move }
 
     pseudo_legal_moves_list
   end
@@ -167,6 +164,16 @@ class Board
 
     legal_moves_list
   end
+
+  def special_movement(coords, piece_type)
+    return row, col, special_case
+  end
+
+  def create_move(start_position, end_position); end
+
+  def make_move(start_position, end_position, special_case); end
+
+  def undo_move; end
 
   def attacked_by?(coords, piece_type, attacking_color, defending_color)
     piece = piece_type == Pawn ? Pawn.new(defending_color) : piece_type
@@ -195,6 +202,34 @@ class Board
       attacked_by?(king_position, piece_type, attacking_color, defending_color)
     end
   end
+
+  def mate?(attacking_color, defending_color); end
+
+  def stalemate?(attacking_color, defending_color); end
+
+  def castling_available?; end
+
+  def castling; end
+
+  def en_passant_available?; end
+
+  def en_passant; end
+
+  def pawn_capture_available?; end
+
+  def pawn_capture; end
+
+  def pawn_double_step_available?; end
+
+  def pawn_double_step; end
+
+  def promotion_available?; end
+
+  def promotion; end
 end
 
 # attacking_color = COLORS.find { |color| color != defending_color }
+
+# moves_list.each do |move|
+#   @positions[move[0]][move[1]].background_color = CAPTURE_SQUARE
+# end
