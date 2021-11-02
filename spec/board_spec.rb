@@ -46,8 +46,10 @@ describe Board do
       [Queen, [6, 3]],
       [Rook, [6, 2]],
       [Knight, [5, 3]],
-      [Bishop, [4, 3]]
+      [Bishop, [4, 3]],
+      [Pawn, [5, 6]]
     ]
+
     before do
       board.positions[row][col].occupant = King.new(defending_color)
       attackers.each do |piece|
@@ -58,9 +60,14 @@ describe Board do
 
     context 'when piece is within range of attack' do
       it 'returns true' do
-        [Queen, Knight, Bishop].each do |piece|
+        [Queen, Knight, Bishop, Pawn].each do |piece|
           expect(
-            board.attacked_by?([row, col], piece, attacking_color)
+            board.attacked_by?(
+              [row, col],
+              piece,
+              attacking_color,
+              defending_color
+            )
           ).to be true
         end
       end
@@ -68,9 +75,14 @@ describe Board do
 
     context 'when piece is out of range of attack' do
       it 'returns false' do
-        [King, Pawn, Rook].each do |piece|
+        [King, Rook].each do |piece|
           expect(
-            board.attacked_by?([row, col], piece, attacking_color)
+            board.attacked_by?(
+              [row, col],
+              piece,
+              attacking_color,
+              defending_color
+            )
           ).to be false
         end
       end
