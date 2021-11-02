@@ -99,7 +99,7 @@ class Board
     output << "\t  "
     ('a'..'h').each { |letter| output << " #{letter} " }
 
-    system 'clear'
+    # system 'clear'
     puts output
   end
 
@@ -118,6 +118,12 @@ class Board
   def valid_selection(coords, valid_choice_list)
     valid_choice_list.include?(coords)
   end
+
+  def create_move(start_position, end_position); end
+
+  def make_move(start_position, end_position, special_case); end
+
+  def undo_move; end
 
   def pseudo_legal_moves(coords)
     pseudo_legal_moves_list = []
@@ -150,7 +156,7 @@ class Board
     pseudo_legal_moves_list
   end
 
-  def legal_moves(pseudo_legal_moves_list)
+  def legal_moves(coords, pseudo_legal_moves_list)
     legal_moves_list = []
 
     pseudo_legal_moves.each do |move|
@@ -162,8 +168,10 @@ class Board
     legal_moves_list
   end
 
-  def attacked_by?(coords, piece_type, attacking_color)
-    piece_type.move_set.each do |direction|
+  def attacked_by?(coords, piece_type, attacking_color, defending_color)
+    piece = piece_type == Pawn ? Pawn.new(defending_color) : piece_type
+
+    piece.capture_set.each do |direction|
       direction.each do |shift|
         move = [coords[0] + shift[0], coords[1] + shift[1]]
         new_square = @positions[move[0]][move[1]]
@@ -184,7 +192,7 @@ class Board
     king_position = @piece_list[defending_color][0][:position]
 
     PIECE_TYPES.any? do |piece_type|
-      attacked_by?(king_position, piece_type, attacking_color)
+      attacked_by?(king_position, piece_type, attacking_color, defending_color)
     end
   end
 end
