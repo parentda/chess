@@ -2,6 +2,7 @@ require 'require_all'
 require_rel '../pieces'
 require_rel 'square'
 require_rel '../move'
+require 'pry-byebug'
 
 class Board
   attr_accessor :positions, :piece_list
@@ -144,29 +145,31 @@ class Board
       end
     end
 
-    special_moves = special_movement(coords, piece_type) if [
-      Pawn,
-      King
-    ].include?(piece_type)
-    special_moves.each { |move| pseudo_legal_moves_list << move }
+    if [Pawn, King].include?(piece_type)
+      special_moves = special_movement(coords, piece, piece_type)
+      special_moves.each { |move| pseudo_legal_moves_list << move }
+    end
+
+    pseudo_legal_moves_list.each do |move|
+      @positions[move[0]][move[1]].background_color = CAPTURE_SQUARE
+    end
 
     pseudo_legal_moves_list
   end
 
-  def special_movement(coords, piece_type)
+  def special_movement(coords, piece, piece_type)
     special_moves = []
 
-    case piece_type
-    when Pawn
+    if piece_type == Pawn
       %i[
         en_passant_availability
         pawn_capture_availability
         pawn_double_step_availability
       ].each do |method|
-        send(method, coords).each { |move| special_moves << move }
+        send(method, coords, piece).each { |move| special_moves << move }
       end
-    when King
-      castle_availability(coords).each { |move| special_moves << move }
+    elsif piece_type == King
+      castle_availability(coords, piece).each { |move| special_moves << move }
     end
 
     special_moves
@@ -222,19 +225,49 @@ class Board
 
   def stalemate?(attacking_color, defending_color); end
 
-  def castle_availability(coords); end
+  def castle_availability(coords, piece)
+    available_moves = []
+
+    if piece.move_count.zero?
+    end
+
+    available_moves
+  end
 
   def castle; end
 
-  def en_passant_availability(coords); end
+  def en_passant_availability(coords, piece)
+    available_moves = []
+    available_moves
+  end
 
   def en_passant; end
 
-  def pawn_capture_availability(coords); end
+  def pawn_capture_availability(coords, piece)
+    available_moves = []
+
+    piece.capture_set.each do |direction|
+      direction.each do |shift|
+        move = [coords[0] + shift[0], coords[1] + shift[1]]
+        new_square = @positions[move[0]][move[1]]
+
+        unless new_square.nil? || new_square.occupant == ' ' ||
+                 new_square.occupant.color == piece.color
+          available_moves << (move << :pawn_capture)
+        end
+      end
+    end
+
+    available_moves
+  end
 
   def pawn_capture; end
 
-  def pawn_double_step_availability(coords); end
+  def pawn_double_step_availability(coords, piece)
+    return [] unless piece.move_count.zero?
+
+    [[coords[0] + piece.move_set[0][0][0] * 2, coords[1], :pawn_double_step]]
+  end
 
   def pawn_double_step; end
 
@@ -248,3 +281,17 @@ end
 # moves_list.each do |move|
 #   @positions[move[0]][move[1]].background_color = CAPTURE_SQUARE
 # end
+
+@board = Board.new
+@piece = @board.positions[8][5].occupant
+@special_moves = @board.special_movement([8, 5], @piece, Pawn)
+
+attacking_color = :black
+attackers = [[Queen, [7, 4]], [Rook, [7, 6]]]
+attackers.each do |piece|
+  @board.positions[piece[1][0]][piece[1][1]].occupant =
+    piece[0].new(attacking_color)
+end
+
+p @board.pseudo_legal_moves([8, 5])
+@board.display
