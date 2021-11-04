@@ -1,8 +1,8 @@
+require 'pry-byebug'
 require 'require_all'
 require_rel '../pieces'
 require_rel 'square'
 require_rel '../move'
-require 'pry-byebug'
 
 class Board
   attr_accessor :positions, :piece_list
@@ -150,10 +150,6 @@ class Board
       special_moves.each { |move| pseudo_legal_moves_list << move }
     end
 
-    pseudo_legal_moves_list.each do |move|
-      @positions[move[0]][move[1]].background_color = CAPTURE_SQUARE
-    end
-
     pseudo_legal_moves_list
   end
 
@@ -189,7 +185,7 @@ class Board
 
   def create_move(start_position, end_position); end
 
-  def make_move(start_position, end_position, special_case); end
+  def make_move(start_position, end_position, special_case = nil); end
 
   def undo_move; end
 
@@ -238,6 +234,19 @@ class Board
 
   def en_passant_availability(coords, piece)
     available_moves = []
+    prev_move = @moves_list.last
+
+    if piece.is_a?(Pawn) && prev_move[:piece].is_a?(Pawn) &&
+         prev_move[:end_position][0] == coords[0] &&
+         (prev_move[:end_position][1] - coords[1]).abs == 1 &&
+         (prev_move[:end_position][0] - prev_move[:start_position][0]).abs == 2
+      available_moves << [
+        coords[0] + piece.move_set[0][0][0],
+        prev_move[:end_position][1],
+        :en_passant
+      ]
+    end
+
     available_moves
   end
 
@@ -251,8 +260,8 @@ class Board
         move = [coords[0] + shift[0], coords[1] + shift[1]]
         new_square = @positions[move[0]][move[1]]
 
-        unless new_square.nil? || new_square.occupant == ' ' ||
-                 new_square.occupant.color == piece.color
+        if new_square&.occupant.is_a?(Piece) &&
+             new_square.occupant.color != piece.color
           available_moves << (move << :pawn_capture)
         end
       end
@@ -286,12 +295,20 @@ end
 @piece = @board.positions[8][5].occupant
 @special_moves = @board.special_movement([8, 5], @piece, Pawn)
 
-attacking_color = :black
-attackers = [[Queen, [7, 4]], [Rook, [7, 6]]]
-attackers.each do |piece|
-  @board.positions[piece[1][0]][piece[1][1]].occupant =
-    piece[0].new(attacking_color)
+pieces = [
+  [Queen, [7, 4], :black],
+  [Rook, [7, 6], :black],
+  [Queen, [4, 5], :white]
+]
+pieces.each do |piece|
+  @board.positions[piece[1][0]][piece[1][1]].occupant = piece[0].new(piece[2])
 end
 
-p @board.pseudo_legal_moves([8, 5])
+pseudo_legal_moves_list = @board.pseudo_legal_moves([3, 6])
+p pseudo_legal_moves_list
+
+pseudo_legal_moves_list.each do |move|
+  @board.positions[move[0]][move[1]].background_color = :on_red
+end
+
 @board.display
