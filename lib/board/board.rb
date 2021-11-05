@@ -224,10 +224,51 @@ class Board
   def castle_availability(coords, piece)
     available_moves = []
 
-    if piece.move_count.zero?
+    defending_color = piece.color
+    attacking_color = COLORS.find { |color| color != defending_color }
+
+    if piece.move_count.zero? && !check?(attacking_color, defending_color)
+      # short castling
+      if castle_available?(coords, :short, attacking_color, defending_color)
+        available_moves << [coords[0], coords[1] + 2, :castle]
+      end
+
+      # long castling
+      if castle_available?(coords, :long, attacking_color, defending_color)
+        available_moves << [coords[0], coords[1] - 2, :castle]
+      end
     end
 
     available_moves
+  end
+
+  def castle_available?(coords, direction, attacking_color, defending_color)
+    shift = direction == :short ? 1.upto(3) : -1.downto(-4)
+    rook_pos = shift.max
+
+    shift.each_with_index do |step, index|
+      if step == rook_pos
+        unless @positions[coords[0]][coords[1] + step].occupant.move_count.zero?
+          return false
+        end
+      elsif step < rook_pos
+        if index.zero?
+          if PIECE_TYPES.any? do |piece_type|
+               attacked_by?(
+                 [coords[0], coords[1] + step],
+                 piece_type,
+                 attacking_color,
+                 defending_color
+               )
+             end
+            return false
+          end
+        end
+      end
+      return false unless @positions[coords[0]][coords[1] + step].empty?
+    end
+
+    true
   end
 
   def castle; end
