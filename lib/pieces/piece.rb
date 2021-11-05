@@ -2,7 +2,7 @@
 require 'colorize'
 
 class Piece
-  attr_reader :color
+  attr_reader :color, :move_count
 
   def initialize(color)
     @move_count = 0
