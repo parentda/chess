@@ -6,8 +6,13 @@ class Pawn < Piece
   @@symbol = "\u265F"
   @@value = 1
 
-  def self.move_set
-    @move_set ||= @color == :black ? [1, 0] : [-1, 0]
+  def move_set
+    @move_set ||= @color == :black ? [[[1, 0]]] : [[[-1, 0]]]
+  end
+
+  def capture_set
+    @capture_set ||=
+      @color == :black ? [[[1, 1], [1, -1]]] : [[[-1, 1], [-1, -1]]]
   end
 
   def symbol
