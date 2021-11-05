@@ -183,7 +183,9 @@ class Board
     legal_moves_list
   end
 
-  def create_move(start_position, end_position); end
+  def create_move(piece, start_position, end_position)
+    { piece: piece, start_position: start_position, end_position: end_position }
+  end
 
   def make_move(start_position, end_position, special_case = nil); end
 
