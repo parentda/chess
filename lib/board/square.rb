@@ -9,6 +9,10 @@ class Square
     @background_color = background_color
   end
 
+  def clear
+    @occupant = ' '
+  end
+
   def empty?
     @occupant == ' '
   end
