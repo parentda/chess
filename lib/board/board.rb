@@ -244,14 +244,14 @@ class Board
 
   def castle_available?(coords, direction, attacking_color, defending_color)
     shift = direction == :short ? 1.upto(3) : -1.downto(-4)
-    rook_pos = shift.max
+    rook_pos = direction == :short ? 3 : -4
 
     shift.each_with_index do |step, index|
       if step == rook_pos
         unless @positions[coords[0]][coords[1] + step].occupant.move_count.zero?
           return false
         end
-      elsif step < rook_pos
+      else
         if index.zero?
           if PIECE_TYPES.any? do |piece_type|
                attacked_by?(
@@ -264,8 +264,8 @@ class Board
             return false
           end
         end
+        return false unless @positions[coords[0]][coords[1] + step].empty?
       end
-      return false unless @positions[coords[0]][coords[1] + step].empty?
     end
 
     true
@@ -338,6 +338,8 @@ end
 #   @positions[move[0]][move[1]].background_color = CAPTURE_SQUARE
 # end
 
+################################################################
+
 @board = Board.new
 @piece = Pawn.new(:black)
 
@@ -348,8 +350,15 @@ end
 }
 
 @board.positions[3][6].occupant = ' '
+@board.positions[9][8].occupant = ' '
+@board.positions[9][7].occupant = ' '
+@board.positions[9][5].occupant = ' '
+@board.positions[9][4].occupant = ' '
+@board.positions[9][3].occupant = ' '
+@board.positions[8][5].occupant = ' '
 @board.positions[5][6].occupant = @piece
 @board.positions[5][5].occupant = Pawn.new(:white)
+# @board.positions[7][8].occupant = Knight.new(:black)
 
 # @special_moves = @board.special_movement([8, 5], @piece, Pawn)
 
@@ -362,7 +371,7 @@ pieces.each do |piece|
   @board.positions[piece[1][0]][piece[1][1]].occupant = piece[0].new(piece[2])
 end
 
-pseudo_legal_moves_list = @board.pseudo_legal_moves([5, 5])
+pseudo_legal_moves_list = @board.pseudo_legal_moves([9, 6])
 p pseudo_legal_moves_list
 
 pseudo_legal_moves_list.each do |move|
