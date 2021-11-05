@@ -9,6 +9,10 @@ class Square
     @background_color = background_color
   end
 
+  def empty?
+    @occupant == ' '
+  end
+
   def to_string
     " #{@occupant} ".send(@background_color)
   end
