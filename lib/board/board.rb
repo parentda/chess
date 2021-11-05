@@ -5,7 +5,7 @@ require_rel 'square'
 require_rel '../move'
 
 class Board
-  attr_accessor :positions, :piece_list
+  attr_accessor :positions, :piece_list, :moves_list
 
   SIZE = 8
   COLORS = %i[white black].freeze
@@ -273,7 +273,13 @@ class Board
   def pawn_capture; end
 
   def pawn_double_step_availability(coords, piece)
-    return [] unless piece.move_count.zero?
+    unless piece.move_count.zero? &&
+             @positions[coords[0] + piece.move_set[0][0][0]][coords[1]]
+               .empty? &&
+             @positions[coords[0] + piece.move_set[0][0][0] * 2][coords[1]]
+               .empty?
+      return []
+    end
 
     [[coords[0] + piece.move_set[0][0][0] * 2, coords[1], :pawn_double_step]]
   end
@@ -292,19 +298,30 @@ end
 # end
 
 @board = Board.new
-@piece = @board.positions[8][5].occupant
-@special_moves = @board.special_movement([8, 5], @piece, Pawn)
+@piece = Pawn.new(:black)
+
+@board.moves_list << {
+  piece: @piece,
+  start_position: [3, 6],
+  end_position: [5, 6]
+}
+
+@board.positions[3][6].occupant = ' '
+@board.positions[5][6].occupant = @piece
+@board.positions[5][5].occupant = Pawn.new(:white)
+
+# @special_moves = @board.special_movement([8, 5], @piece, Pawn)
 
 pieces = [
   [Queen, [7, 4], :black],
-  [Rook, [7, 6], :black],
-  [Queen, [4, 5], :white]
+  [Rook, [7, 6], :black]
+  # [Queen, [4, 5], :white]
 ]
 pieces.each do |piece|
   @board.positions[piece[1][0]][piece[1][1]].occupant = piece[0].new(piece[2])
 end
 
-pseudo_legal_moves_list = @board.pseudo_legal_moves([3, 6])
+pseudo_legal_moves_list = @board.pseudo_legal_moves([5, 5])
 p pseudo_legal_moves_list
 
 pseudo_legal_moves_list.each do |move|
