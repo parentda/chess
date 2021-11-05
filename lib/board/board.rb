@@ -187,9 +187,45 @@ class Board
     { piece: piece, start_position: start_position, end_position: end_position }
   end
 
-  def make_move(start_position, end_position, special_case = nil); end
+  def make_move(piece, start_position, end_position, special_case = nil)
+    turn = []
 
-  def undo_move; end
+    if special_case
+      turn = send(special_case, piece, start_position, end_position)
+    else
+      occupant = @positions[end_position[0]][end_position[1]].occupant
+      turn << create_move(piece, start_position, end_position)
+      turn << create_move(occupant, end_position, nil) if occupant.is_a?(Piece)
+    end
+
+    update_board(turn, :forward)
+    @moves_list << turn
+  end
+
+  def undo_move
+    prev_move = @moves_list.pop
+    update_board(prev_move, :reverse)
+  end
+
+  def update_board(turn, direction)
+    turn.each do |move|
+      update_move_count(move, direction)
+      update_piece_list(move, direction)
+      update_position(move, direction)
+    end
+  end
+
+  def update_move_count(move, direction)
+    piece = move[:piece]
+
+    unless move[:end_position].nil?
+      direction == :forward ? (piece.move_count += 1) : (piece.move_count -= 1)
+    end
+  end
+
+  def update_piece_list(move, direction); end
+
+  def update_position(move, direction); end
 
   def attacked_by?(coords, piece_type, attacking_color, defending_color)
     piece = piece_type == Pawn ? Pawn.new(defending_color) : piece_type
@@ -273,13 +309,13 @@ class Board
     true
   end
 
-  def castle; end
+  def castle(piece, start_position, end_position); end
 
   def en_passant_availability(coords, piece)
     available_moves = []
     prev_move = @moves_list.last
 
-    if piece.is_a?(Pawn) && prev_move[:piece].is_a?(Pawn) &&
+    if piece.is_a?(Pawn) && !prev_move.nil? && prev_move[:piece].is_a?(Pawn) &&
          prev_move[:end_position][0] == coords[0] &&
          (prev_move[:end_position][1] - coords[1]).abs == 1 &&
          (prev_move[:end_position][0] - prev_move[:start_position][0]).abs == 2
@@ -293,7 +329,7 @@ class Board
     available_moves
   end
 
-  def en_passant; end
+  def en_passant(piece, start_position, end_position); end
 
   def pawn_capture_availability(coords, piece)
     available_moves = []
@@ -313,7 +349,7 @@ class Board
     available_moves
   end
 
-  def pawn_capture; end
+  def pawn_capture(piece, start_position, end_position); end
 
   def pawn_double_step_availability(coords, piece)
     unless piece.move_count.zero? &&
@@ -327,11 +363,23 @@ class Board
     [[coords[0] + piece.move_set[0][0][0] * 2, coords[1], :pawn_double_step]]
   end
 
-  def pawn_double_step; end
+  def pawn_double_step(piece, start_position, end_position); end
 
   def promotion_available?; end
 
   def promotion; end
+
+  ################################################################
+
+  def all_possible_moves
+    start = Time.now
+    @piece_list.each_value do |list|
+      list.each { |piece| pseudo_legal_moves(piece[:position]) }
+    end
+    fin = Time.now
+    time = fin - start
+    puts time
+  end
 end
 
 # attacking_color = COLORS.find { |color| color != defending_color }
@@ -358,15 +406,19 @@ end
 @board.positions[9][4].occupant = ' '
 @board.positions[9][3].occupant = ' '
 @board.positions[8][5].occupant = ' '
+@board.positions[8][4].occupant = ' '
+@board.positions[8][6].occupant = ' '
+@board.positions[8][7].occupant = ' '
+@board.positions[8][8].occupant = ' '
 @board.positions[5][6].occupant = @piece
 @board.positions[5][5].occupant = Pawn.new(:white)
-# @board.positions[7][8].occupant = Knight.new(:black)
+@board.positions[8][6].occupant = Pawn.new(:black)
 
 # @special_moves = @board.special_movement([8, 5], @piece, Pawn)
 
 pieces = [
-  [Queen, [7, 4], :black],
-  [Rook, [7, 6], :black]
+  # [Queen, [7, 4], :black],
+  # [Rook, [7, 6], :black]
   # [Queen, [4, 5], :white]
 ]
 pieces.each do |piece|
@@ -379,5 +431,11 @@ p pseudo_legal_moves_list
 pseudo_legal_moves_list.each do |move|
   @board.positions[move[0]][move[1]].background_color = :on_red
 end
+
+start = Time.now
+@board.check?(:black, :white)
+fin = Time.now
+time = fin - start
+puts time
 
 @board.display
