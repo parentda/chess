@@ -223,9 +223,51 @@ class Board
     end
   end
 
-  def update_piece_list(move, direction); end
+  def update_piece_list(move, direction)
+    piece = move[:piece]
+    color = piece.color
 
-  def update_position(move, direction); end
+    case direction
+    when :forward
+      if move[:end_position].nil?
+        @piece_list[color].delete_if { |item| item[:piece] == piece }
+      else
+        index = @piece_list[color].index { |item| item[:piece] == piece }
+        @piece_list[color][index][position] = move[:end_position]
+      end
+    when :reverse
+      if move[:end_position].nil?
+        @piece_list[color] << { piece: piece, position: start_position }
+      else
+        index = @piece_list[color].index { |item| item[:piece] == piece }
+        @piece_list[color][index][position] = move[:start_position]
+      end
+    end
+  end
+
+  def update_position(move, direction)
+    piece = move[:piece]
+    color = piece.color
+
+    case direction
+    when :forward
+      if move[:end_position].nil?
+        if @positions[:start_position[0]][:start_position[1]].occupant == piece
+          @positions[:start_position[0]][:start_position[1]].clear
+        end
+      else
+        @positions[:end_position[0]][:end_position[1]].occupant = piece
+        @positions[:start_position[0]][:start_position[1]].clear
+      end
+    when :reverse
+      unless move[:end_position].nil?
+        if @positions[:end_position[0]][:end_position[1]].occupant == piece
+          @positions[:end_position[0]][:end_position[1]].clear
+        end
+      end
+      @positions[:start_position[0]][:start_position[1]].occupant = piece
+    end
+  end
 
   def attacked_by?(coords, piece_type, attacking_color, defending_color)
     piece = piece_type == Pawn ? Pawn.new(defending_color) : piece_type
