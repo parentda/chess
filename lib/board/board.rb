@@ -363,11 +363,7 @@ class Board
   end
 
   def castle(piece, start_position, end_position)
-    king_move = {
-      piece: piece,
-      start_position: start_position,
-      end_position: end_position
-    }
+    king_move = create_king_move(piece, start_position, end_position)
     rank = start_position[0]
 
     if end_position[1] > start_position[1]
@@ -380,11 +376,7 @@ class Board
       rook_end_position = [rank, 5]
     end
 
-    rook_move = {
-      piece: rook,
-      start_position: rook_start_position,
-      end_position: rook_end_position
-    }
+    rook_move = create_move(rook, rook_start_position, rook_end_position)
 
     [king_move, rook_move]
   end
