@@ -362,7 +362,32 @@ class Board
     true
   end
 
-  def castle(piece, start_position, end_position); end
+  def castle(piece, start_position, end_position)
+    king_move = {
+      piece: piece,
+      start_position: start_position,
+      end_position: end_position
+    }
+    rank = start_position[0]
+
+    if end_position[1] > start_position[1]
+      rook = @positions[rank][9]
+      rook_start_position = [rank, 9]
+      rook_end_position = [rank, 7]
+    else
+      rook = @positions[rank][2]
+      rook_start_position = [rank, 2]
+      rook_end_position = [rank, 5]
+    end
+
+    rook_move = {
+      piece: rook,
+      start_position: rook_start_position,
+      end_position: rook_end_position
+    }
+
+    [king_move, rook_move]
+  end
 
   def en_passant_availability(coords, piece)
     available_moves = []
