@@ -218,7 +218,7 @@ class Board
   def update_move_count(move, direction)
     piece = move[:piece]
 
-    unless move[:end_position].nil?
+    unless move[:start_position].nil? || move[:end_position].nil?
       direction == :forward ? (piece.move_count += 1) : (piece.move_count -= 1)
     end
   end
@@ -231,6 +231,8 @@ class Board
     when :forward
       if move[:end_position].nil?
         @piece_list[color].delete_if { |item| item[:piece] == piece }
+      elsif move[:start_position].nil?
+        @piece_list[color] << { piece: piece, position: end_position }
       else
         index = @piece_list[color].index { |item| item[:piece] == piece }
         @piece_list[color][index][position] = move[:end_position]
@@ -238,6 +240,8 @@ class Board
     when :reverse
       if move[:end_position].nil?
         @piece_list[color] << { piece: piece, position: start_position }
+      elsif move[:start_position].nil?
+        @piece_list[color].delete_if { |item| item[:piece] == piece }
       else
         index = @piece_list[color].index { |item| item[:piece] == piece }
         @piece_list[color][index][position] = move[:start_position]
@@ -247,7 +251,6 @@ class Board
 
   def update_position(move, direction)
     piece = move[:piece]
-    color = piece.color
 
     case direction
     when :forward
