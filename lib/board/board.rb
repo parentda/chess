@@ -443,7 +443,9 @@ class Board
     [[coords[0] + piece.move_set[0][0][0] * 2, coords[1], :pawn_double_step]]
   end
 
-  def pawn_double_step(piece, start_position, end_position); end
+  def pawn_double_step(piece, start_position, end_position)
+    create_move(piece, start_position, end_position)
+  end
 
   def promotion_available?; end
 
