@@ -429,7 +429,15 @@ class Board
     available_moves
   end
 
-  def pawn_capture(piece, start_position, end_position); end
+  def pawn_capture(piece, start_position, end_position)
+    attack_move = create_move(piece, start_position, end_position)
+
+    captured_piece = @positions[end_position[0]][end_position[1]].occupant
+
+    captured_move = create_move(captured_piece, end_position, nil)
+
+    [attack_move, captured_move]
+  end
 
   def pawn_double_step_availability(coords, piece)
     unless piece.move_count.zero? &&
