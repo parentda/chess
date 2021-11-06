@@ -363,7 +363,7 @@ class Board
   end
 
   def castle(piece, start_position, end_position)
-    king_move = create_king_move(piece, start_position, end_position)
+    king_move = create_move(piece, start_position, end_position)
     rank = start_position[0]
 
     if end_position[1] > start_position[1]
@@ -399,7 +399,17 @@ class Board
     available_moves
   end
 
-  def en_passant(piece, start_position, end_position); end
+  def en_passant(piece, start_position, end_position)
+    attack_move = create_move(piece, start_position, end_position)
+
+    captured_position = [start_position[0], end_position[1]]
+    captured_piece =
+      @positions[captured_position[0]][captured_position[1]].occupant
+
+    captured_move = create_move(captured_piece, captured_position, nil)
+
+    [attack_move, captured_move]
+  end
 
   def pawn_capture_availability(coords, piece)
     available_moves = []
