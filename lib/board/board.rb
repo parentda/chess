@@ -258,17 +258,25 @@ class Board
         if @positions[:start_position[0]][:start_position[1]].occupant == piece
           @positions[:start_position[0]][:start_position[1]].clear
         end
+      elsif move[:start_position].nil?
+        @positions[:end_position[0]][:end_position[1]].occupant = piece
       else
         @positions[:end_position[0]][:end_position[1]].occupant = piece
         @positions[:start_position[0]][:start_position[1]].clear
       end
     when :reverse
-      unless move[:end_position].nil?
+      if move[:end_position].nil?
+        @positions[:start_position[0]][:start_position[1]].occupant = piece
+      elsif move[:start_position].nil?
+        if @positions[:end_position[0]][:end_position[1]].occupant == piece
+          @positions[:end_position[0]][:end_position[1]].clear
+        end
+      else
+        @positions[:start_position[0]][:start_position[1]].occupant = piece
         if @positions[:end_position[0]][:end_position[1]].occupant == piece
           @positions[:end_position[0]][:end_position[1]].clear
         end
       end
-      @positions[:start_position[0]][:start_position[1]].occupant = piece
     end
   end
 
