@@ -174,9 +174,14 @@ class Board
   def legal_moves(coords, pseudo_legal_moves_list)
     legal_moves_list = []
 
+    piece = @positions[coords[0]][coords[1]].occupant
+    defending_color = piece.color
+    attacking_color = COLORS.find { |color| color != defending_color }
+
     pseudo_legal_moves_list.each do |move|
-      make_move
-      legal_moves_list << move unless check?
+      end_position = [move[0], move[1]]
+      make_move(piece, coords, end_position, move[2])
+      legal_moves_list << move unless check?(attacking_color, defending_color)
       undo_move
     end
 
@@ -227,56 +232,61 @@ class Board
 
   def update_piece_list(move, direction)
     piece = move[:piece]
+    start_position = move[:start_position]
+    end_position = move[:end_position]
     color = piece.color
 
     case direction
     when :forward
-      if move[:end_position].nil?
+      if end_position.nil?
         @piece_list[color].delete_if { |item| item[:piece] == piece }
-      elsif move[:start_position].nil?
+      elsif start_position.nil?
         @piece_list[color] << { piece: piece, position: end_position }
       else
         index = @piece_list[color].index { |item| item[:piece] == piece }
-        @piece_list[color][index][position] = move[:end_position]
+        @piece_list[color][index][:position] = end_position
       end
     when :reverse
-      if move[:end_position].nil?
+      if end_position.nil?
         @piece_list[color] << { piece: piece, position: start_position }
-      elsif move[:start_position].nil?
+      elsif start_position.nil?
         @piece_list[color].delete_if { |item| item[:piece] == piece }
       else
         index = @piece_list[color].index { |item| item[:piece] == piece }
-        @piece_list[color][index][position] = move[:start_position]
+        @piece_list[color][index][:position] = start_position
       end
     end
   end
 
   def update_position(move, direction)
     piece = move[:piece]
+    start_position = move[:start_position]
+    end_position = move[:end_position]
+    p "Move: #{move}"
 
     case direction
     when :forward
-      if move[:end_position].nil?
-        if @positions[:start_position[0]][:start_position[1]].occupant == piece
-          @positions[:start_position[0]][:start_position[1]].clear
+      if end_position.nil?
+        if @positions[start_position[0]][start_position[1]].occupant == piece
+          @positions[start_position[0]][start_position[1]].clear
         end
-      elsif move[:start_position].nil?
-        @positions[:end_position[0]][:end_position[1]].occupant = piece
+      elsif start_position.nil?
+        @positions[end_position[0]][end_position[1]].occupant = piece
       else
-        @positions[:end_position[0]][:end_position[1]].occupant = piece
-        @positions[:start_position[0]][:start_position[1]].clear
+        @positions[end_position[0]][end_position[1]].occupant = piece
+        @positions[start_position[0]][start_position[1]].clear
       end
     when :reverse
-      if move[:end_position].nil?
-        @positions[:start_position[0]][:start_position[1]].occupant = piece
-      elsif move[:start_position].nil?
-        if @positions[:end_position[0]][:end_position[1]].occupant == piece
-          @positions[:end_position[0]][:end_position[1]].clear
+      if end_position.nil?
+        @positions[start_position[0]][start_position[1]].occupant = piece
+      elsif start_position.nil?
+        if @positions[end_position[0]][end_position[1]].occupant == piece
+          @positions[end_position[0]][end_position[1]].clear
         end
       else
-        @positions[:start_position[0]][:start_position[1]].occupant = piece
-        if @positions[:end_position[0]][:end_position[1]].occupant == piece
-          @positions[:end_position[0]][:end_position[1]].clear
+        @positions[start_position[0]][start_position[1]].occupant = piece
+        if @positions[end_position[0]][end_position[1]].occupant == piece
+          @positions[end_position[0]][end_position[1]].clear
         end
       end
     end
