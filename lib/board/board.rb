@@ -208,7 +208,9 @@ class Board
   end
 
   def update_board(turn, direction)
-    turn.each do |move|
+    method = direction == :forward ? :each : :reverse_each
+
+    turn.public_send(method) do |move|
       update_move_count(move, direction)
       update_piece_list(move, direction)
       update_position(move, direction)
