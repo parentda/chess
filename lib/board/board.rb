@@ -224,6 +224,7 @@ class Board
 
   def update_move_count(move, direction)
     piece = move[:piece]
+    p "Move: #{move}"
 
     unless move[:start_position].nil? || move[:end_position].nil?
       direction == :forward ? (piece.move_count += 1) : (piece.move_count -= 1)
@@ -262,7 +263,6 @@ class Board
     piece = move[:piece]
     start_position = move[:start_position]
     end_position = move[:end_position]
-    p "Move: #{move}"
 
     case direction
     when :forward
@@ -379,11 +379,11 @@ class Board
     rank = start_position[0]
 
     if end_position[1] > start_position[1]
-      rook = @positions[rank][9]
+      rook = @positions[rank][9].occupant
       rook_start_position = [rank, 9]
       rook_end_position = [rank, 7]
     else
-      rook = @positions[rank][2]
+      rook = @positions[rank][2].occupant
       rook_start_position = [rank, 2]
       rook_end_position = [rank, 5]
     end
@@ -514,7 +514,7 @@ end
 @board.positions[8][8].occupant = ' '
 @board.positions[5][6].occupant = @piece
 @board.positions[5][5].occupant = Pawn.new(:white)
-@board.positions[8][6].occupant = Pawn.new(:black)
+# @board.positions[8][6].occupant = Pawn.new(:black)
 
 # @special_moves = @board.special_movement([8, 5], @piece, Pawn)
 
@@ -528,16 +528,23 @@ pieces.each do |piece|
 end
 
 pseudo_legal_moves_list = @board.pseudo_legal_moves([9, 6])
-p pseudo_legal_moves_list
+p "Pseudo-legal moves: #{pseudo_legal_moves_list}"
 
-pseudo_legal_moves_list.each do |move|
+start = Time.now
+legal_moves_list = @board.legal_moves([9, 6], pseudo_legal_moves_list)
+fin = Time.now
+time = fin - start
+p "Time: #{time}"
+p "Legal moves: #{pseudo_legal_moves_list}"
+
+legal_moves_list.each do |move|
   @board.positions[move[0]][move[1]].background_color = :on_red
 end
 
-start = Time.now
-@board.check?(:black, :white)
-fin = Time.now
-time = fin - start
-puts time
+# start = Time.now
+# @board.check?(:black, :white)
+# fin = Time.now
+# time = fin - start
+# puts time
 
 @board.display
