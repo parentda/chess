@@ -135,7 +135,7 @@ class Board
         break if new_square.nil?
 
         if new_square.occupant.is_a?(Piece)
-          unless new_square.occupant.color == piece_color
+          unless new_square.occupant.color == piece_color || piece_type == Pawn
             pseudo_legal_moves_list << move
           end
           break
@@ -312,11 +312,9 @@ class Board
   end
 
   def check?(attacking_color, defending_color)
-    king_position = @piece_list[defending_color][0][:position]
+    sort_piece_lists unless @piece_list[defending_color][0][:piece].is_a?(King)
 
-    unless @piece_list[defending_color][0][:piece].is_a?(King)
-      return puts 'Selected piece not a King'
-    end
+    king_position = @piece_list[defending_color][0][:position]
 
     PIECE_TYPES.any? do |piece_type|
       attacked_by?(king_position, piece_type, attacking_color, defending_color)
@@ -502,64 +500,64 @@ end
 
 ################################################################
 
-@board = Board.new
-@piece = Pawn.new(:black)
+# @board = Board.new
+# @piece = Pawn.new(:black)
 
-@board.moves_list << {
-  piece: @piece,
-  start_position: [3, 6],
-  end_position: [5, 6]
-}
+# @board.moves_list << {
+#   piece: @piece,
+#   start_position: [3, 6],
+#   end_position: [5, 6]
+# }
 
-@board.positions[3][6].occupant = ' '
-@board.positions[9][8].occupant = ' '
-@board.positions[9][7].occupant = ' '
-@board.positions[9][5].occupant = ' '
-@board.positions[9][4].occupant = ' '
-@board.positions[9][3].occupant = ' '
-@board.positions[8][5].occupant = ' '
-@board.positions[8][4].occupant = ' '
-@board.positions[8][6].occupant = ' '
-@board.positions[8][7].occupant = ' '
-@board.positions[8][8].occupant = ' '
-@board.positions[5][6].occupant = @piece
-@white_pawn = Pawn.new(:white)
-@board.positions[5][5].occupant = @white_pawn
-@board.piece_list[:white] << { piece: @white_pawn, position: [5, 5] }
-@board.positions[8][8].occupant = Pawn.new(:black)
+# @board.positions[3][6].occupant = ' '
+# @board.positions[9][8].occupant = ' '
+# @board.positions[9][7].occupant = ' '
+# @board.positions[9][5].occupant = ' '
+# @board.positions[9][4].occupant = ' '
+# @board.positions[9][3].occupant = ' '
+# @board.positions[8][5].occupant = ' '
+# @board.positions[8][4].occupant = ' '
+# @board.positions[8][6].occupant = ' '
+# @board.positions[8][7].occupant = ' '
+# @board.positions[8][8].occupant = ' '
+# @board.positions[5][6].occupant = @piece
+# @white_pawn = Pawn.new(:white)
+# @board.positions[5][5].occupant = @white_pawn
+# @board.piece_list[:white] << { piece: @white_pawn, position: [5, 5] }
+# @board.positions[8][8].occupant = Pawn.new(:black)
 
-# @special_moves = @board.special_movement([8, 5], @piece, Pawn)
+# # @special_moves = @board.special_movement([8, 5], @piece, Pawn)
 
-pieces = [
-  # [Queen, [7, 4], :black],
-  # [Rook, [7, 6], :black]
-  # [Queen, [4, 5], :white]
-]
-pieces.each do |piece|
-  @board.positions[piece[1][0]][piece[1][1]].occupant = piece[0].new(piece[2])
-end
+# pieces = [
+#   # [Queen, [7, 4], :black],
+#   # [Rook, [7, 6], :black]
+#   # [Queen, [4, 5], :white]
+# ]
+# pieces.each do |piece|
+#   @board.positions[piece[1][0]][piece[1][1]].occupant = piece[0].new(piece[2])
+# end
 
-pseudo_legal_moves_list = @board.pseudo_legal_moves([5, 5])
-p "Pseudo-legal moves: #{pseudo_legal_moves_list}"
-
-start = Time.now
-legal_moves_list = @board.legal_moves([5, 5], pseudo_legal_moves_list)
-fin = Time.now
-time = fin - start
-p "Time: #{time}"
-p "Legal moves: #{legal_moves_list}"
-
-legal_moves_list.each do |move|
-  @board.positions[move[0]][move[1]].background_color = :on_red
-end
+# pseudo_legal_moves_list = @board.pseudo_legal_moves([5, 5])
+# p "Pseudo-legal moves: #{pseudo_legal_moves_list}"
 
 # start = Time.now
-# @board.check?(:black, :white)
+# legal_moves_list = @board.legal_moves([5, 5], pseudo_legal_moves_list)
 # fin = Time.now
 # time = fin - start
-# puts time
-@board.display
-@pawn = @board.positions[8][3].occupant
-@board.make_move(@pawn, [8, 3], [5, 6])
+# p "Time: #{time}"
+# p "Legal moves: #{legal_moves_list}"
 
-@board.display
+# legal_moves_list.each do |move|
+#   @board.positions[move[0]][move[1]].background_color = :on_red
+# end
+
+# # start = Time.now
+# # @board.check?(:black, :white)
+# # fin = Time.now
+# # time = fin - start
+# # puts time
+# @board.display
+# @pawn = @board.positions[8][3].occupant
+# @board.make_move(@pawn, [8, 3], [5, 6])
+
+# @board.display
