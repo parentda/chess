@@ -88,4 +88,58 @@ describe Board do
       end
     end
   end
+
+  describe '#check?' do
+    defending_color = :white
+    attacking_color = :black
+
+    context 'when white King is attacked by a Knight' do
+      attacker = [[Knight, [7, 7]]]
+
+      before do
+        attacker.each do |piece|
+          board.positions[piece[1][0]][piece[1][1]].occupant =
+            piece[0].new(attacking_color)
+        end
+      end
+      it 'returns true' do
+        expect(board.check?(attacking_color, defending_color)).to be true
+      end
+    end
+
+    context 'when white King is attacked by a Queen' do
+      attacker = [[Queen, [5, 2]]]
+
+      before do
+        board.positions[8][5].clear
+        attacker.each do |piece|
+          board.positions[piece[1][0]][piece[1][1]].occupant =
+            piece[0].new(attacking_color)
+        end
+      end
+      it 'returns true' do
+        expect(board.check?(attacking_color, defending_color)).to be true
+      end
+    end
+
+    context 'when white King is attacked by a Pawn' do
+      attacker = [[Pawn, [8, 5]]]
+
+      before do
+        attacker.each do |piece|
+          new_piece = piece[0].new(attacking_color)
+          board.positions[piece[1][0]][piece[1][1]].occupant = new_piece
+        end
+      end
+      it 'returns true' do
+        expect(board.check?(attacking_color, defending_color)).to be true
+      end
+    end
+
+    context 'when game starts' do
+      it 'returns false' do
+        expect(board.check?(attacking_color, defending_color)).to be false
+      end
+    end
+  end
 end
