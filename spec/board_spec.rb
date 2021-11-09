@@ -93,7 +93,7 @@ describe Board do
     defending_color = :white
     attacking_color = :black
 
-    context 'when white King is attacked by a Knight' do
+    context 'when white King is attacked by a black Knight' do
       attacker = [[Knight, [7, 7]]]
 
       before do
@@ -107,7 +107,21 @@ describe Board do
       end
     end
 
-    context 'when white King is attacked by a Queen' do
+    context 'when black King is attacked by a white Pawn' do
+      attacker = [[Pawn, [3, 5]]]
+
+      before do
+        attacker.each do |piece|
+          board.positions[piece[1][0]][piece[1][1]].occupant =
+            piece[0].new(defending_color)
+        end
+      end
+      it 'returns true' do
+        expect(board.check?(defending_color, attacking_color)).to be true
+      end
+    end
+
+    context 'when white King is attacked by a black Queen' do
       attacker = [[Queen, [5, 2]]]
 
       before do
@@ -122,7 +136,7 @@ describe Board do
       end
     end
 
-    context 'when white King is attacked by a Pawn' do
+    context 'when white King is attacked by a black Pawn' do
       attacker = [[Pawn, [8, 5]]]
 
       before do
