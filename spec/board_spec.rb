@@ -156,4 +156,84 @@ describe Board do
       end
     end
   end
+
+  describe '#legal_moves' do
+    context 'when white Bishop is blocking an attack on the white King from the black Queen' do
+      it 'returns only positions that keep the white King out of check' do
+        white_pawn = board.positions[8][5].occupant
+        white_bishop = board.positions[9][4].occupant
+        black_queen = board.positions[2][5].occupant
+        board.make_move(white_pawn, [8, 5], [6, 5])
+        board.make_move(white_bishop, [9, 4], [8, 5])
+        board.make_move(black_queen, [2, 5], [5, 2])
+        board.display
+        true_legal_positions = [[7, 4], [6, 3], [5, 2]]
+        pseudo_legal_positions = board.pseudo_legal_moves([8, 5])
+        expect(
+          board.legal_moves([8, 5], pseudo_legal_positions)
+        ).to eq true_legal_positions
+      end
+    end
+
+    context 'when white King is currently in check from the black Queen' do
+      it 'white Queen can only move to block or capture the black Queen' do
+        white_pawn = board.positions[8][6].occupant
+        white_queen = board.positions[9][5].occupant
+        black_queen = board.positions[2][5].occupant
+        board.make_move(white_pawn, [8, 6], [6, 4])
+        board.make_move(white_queen, [9, 5], [7, 9])
+        board.make_move(black_queen, [2, 5], [4, 6])
+        board.display
+        true_legal_positions = [[4, 6], [7, 6]]
+        pseudo_legal_positions = board.pseudo_legal_moves([7, 9])
+        expect(
+          board.legal_moves([7, 9], pseudo_legal_positions)
+        ).to eq true_legal_positions
+      end
+    end
+
+    context 'when white King is currently safe, but taking en passant would put the King in check' do
+      it 'does not allow the en passant to occur' do
+        white_pawn = board.positions[8][6].occupant
+        white_king = board.positions[9][6].occupant
+        black_pawn = board.positions[3][6].occupant
+        black_queen = board.positions[2][5].occupant
+        board.make_move(white_pawn, [8, 6], [5, 5])
+        board.make_move(white_king, [9, 6], [5, 2])
+        board.make_move(black_queen, [2, 5], [5, 9])
+        board.make_move(black_pawn, [3, 6], [5, 6])
+        board.moves_list
+        board.display
+        true_legal_positions = [[4, 5]]
+        pseudo_legal_positions = board.pseudo_legal_moves([5, 5])
+        expect(
+          board.legal_moves([5, 5], pseudo_legal_positions)
+        ).to eq true_legal_positions
+      end
+    end
+
+    context 'when white King is not under attack and will not be by the movement of the white Bishop' do
+      it 'returns all possible positions for the white Bishop' do
+        white_pawn = board.positions[8][5].occupant
+        white_bishop = board.positions[9][4].occupant
+        board.make_move(white_pawn, [8, 5], [6, 5])
+        board.make_move(white_bishop, [9, 4], [8, 5])
+        board.display
+        true_legal_positions = [
+          [7, 4],
+          [6, 3],
+          [5, 2],
+          [9, 4],
+          [7, 6],
+          [6, 7],
+          [5, 8],
+          [4, 9]
+        ].sort
+        pseudo_legal_positions = board.pseudo_legal_moves([8, 5])
+        expect(
+          board.legal_moves([8, 5], pseudo_legal_positions).sort
+        ).to eq true_legal_positions
+      end
+    end
+  end
 end
