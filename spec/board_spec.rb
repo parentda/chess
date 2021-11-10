@@ -262,7 +262,7 @@ describe Board do
     end
 
     context 'when one castle option is available and the other is attacked by an enemy piece' do
-      it 'returns a list of two moves' do
+      it 'returns a list of one move' do
         coords = [2, 6]
         piece = board.positions[coords[0]][coords[1]].occupant
         empty_spaces = [[2, 3], [2, 4], [2, 5], [2, 7], [2, 8]]
@@ -277,7 +277,7 @@ describe Board do
     end
 
     context 'when one castle option is available while the other rook has already moved' do
-      it 'returns a list of one moves' do
+      it 'returns a list of one move' do
         empty_spaces = [[9, 3], [9, 4], [9, 5], [9, 7], [9, 8]]
         empty_spaces.each do |coords|
           board.positions[coords[0]][coords[1]].clear
@@ -321,6 +321,40 @@ describe Board do
   end
 
   describe '#en_passant_availability' do
+    let(:white_pawn) { board.positions[8][4].occupant }
+    let(:black_pawn) { board.positions[3][5].occupant }
+
+    context 'when en passant is available' do
+      context 'when white attacks black' do
+        it 'returns a list of one move' do
+          board.make_move(white_pawn, [8, 4], [5, 4])
+          board.make_move(black_pawn, [3, 5], [5, 5])
+          legal_moves = board.en_passant_availability([5, 4], white_pawn)
+
+          expect(legal_moves.length).to eq(1)
+        end
+      end
+
+      context 'when black attacks white' do
+        it 'returns a list of one move' do
+          board.make_move(black_pawn, [3, 5], [6, 5])
+          board.make_move(white_pawn, [8, 4], [6, 4])
+          legal_moves = board.en_passant_availability([6, 5], black_pawn)
+
+          expect(legal_moves.length).to eq(1)
+        end
+      end
+    end
+
+    context 'when en passant is unavailable' do
+      it 'returns an empty list' do
+        board.make_move(black_pawn, [3, 5], [5, 5])
+        board.make_move(white_pawn, [8, 4], [5, 4])
+        legal_moves = board.en_passant_availability([5, 4], white_pawn)
+
+        expect(legal_moves.length).to eq(0)
+      end
+    end
   end
 
   describe '#pawn_capture_availability' do
