@@ -198,7 +198,9 @@ class Board
     if special_case
       turn = send(special_case, piece, start_position, end_position)
     else
-      occupant = @positions[end_position[0]][end_position[1]].occupant
+      occupant =
+        @positions[end_position[0]][end_position[1]]
+          .occupant unless end_position.nil?
       turn << create_move(piece, start_position, end_position)
       turn << create_move(occupant, end_position, nil) if occupant.is_a?(Piece)
     end
@@ -321,8 +323,14 @@ class Board
     end
   end
 
-  def mate?(defending_color)
-    piece_list[defending_color].each do |hash|
+  def mate?(attacking_color, defending_color)
+    check?(attacking_color, defending_color) && no_legal_moves?(defending_color)
+  end
+
+  def stalemate?(attacking_color, defending_color); end
+
+  def no_legal_moves?(color)
+    piece_list[color].each do |hash|
       position = hash[:position]
 
       pseudo_legal_moves_list = pseudo_legal_moves(position)
@@ -332,8 +340,6 @@ class Board
     end
     true
   end
-
-  def stalemate?(attacking_color, defending_color); end
 
   def castle_availability(coords, piece)
     available_moves = []
