@@ -415,7 +415,52 @@ describe Board do
         board.make_move(pawn, coords, [8, 5])
         legal_moves = board.pawn_double_step_availability([8, 5], pawn)
 
-        expect(legal_moves.length).to eq(1)
+        expect(legal_moves.length).to eq(0)
+      end
+    end
+  end
+
+  describe '#mate?' do
+    attacking_color = :black
+    defending_color = :white
+
+    context 'when the game begins' do
+      it 'returns false' do
+        expect(board).not_to be_mate(attacking_color, defending_color)
+      end
+    end
+
+    context 'when one side is in check, but not mate' do
+      it 'returns false' do
+        [[9, 7], [9, 8], [9, 9]].each do |coords|
+          board.make_move(
+            board.positions[coords[0]][coords[1]].occupant,
+            coords,
+            nil
+          )
+        end
+
+        black_queen = board.positions[2][5].occupant
+        board.make_move(black_queen, [2, 5], [9, 7])
+
+        expect(board).not_to be_mate(attacking_color, defending_color)
+      end
+    end
+
+    context 'when one side is in checkmate' do
+      it 'returns true' do
+        [[9, 7], [9, 8], [9, 9]].each do |coords|
+          board.make_move(
+            board.positions[coords[0]][coords[1]].occupant,
+            coords,
+            nil
+          )
+        end
+
+        black_queen = board.positions[2][5].occupant
+        board.make_move(black_queen, [2, 5], [9, 9])
+
+        expect(board).to be_mate(attacking_color, defending_color)
       end
     end
   end
