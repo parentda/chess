@@ -166,7 +166,6 @@ describe Board do
         board.make_move(white_pawn, [8, 5], [6, 5])
         board.make_move(white_bishop, [9, 4], [8, 5])
         board.make_move(black_queen, [2, 5], [5, 2])
-        board.display
         true_legal_positions = [[7, 4], [6, 3], [5, 2]]
         pseudo_legal_positions = board.pseudo_legal_moves([8, 5])
         expect(
@@ -183,7 +182,6 @@ describe Board do
         board.make_move(white_pawn, [8, 6], [6, 4])
         board.make_move(white_queen, [9, 5], [7, 9])
         board.make_move(black_queen, [2, 5], [4, 6])
-        board.display
         true_legal_positions = [[4, 6], [7, 6]]
         pseudo_legal_positions = board.pseudo_legal_moves([7, 9])
         expect(
@@ -203,7 +201,6 @@ describe Board do
         board.make_move(black_queen, [2, 5], [5, 9])
         board.make_move(black_pawn, [3, 6], [5, 6])
         board.moves_list
-        board.display
         true_legal_positions = [[4, 5]]
         pseudo_legal_positions = board.pseudo_legal_moves([5, 5])
         expect(
@@ -218,7 +215,6 @@ describe Board do
         white_bishop = board.positions[9][4].occupant
         board.make_move(white_pawn, [8, 5], [6, 5])
         board.make_move(white_bishop, [9, 4], [8, 5])
-        board.display
         true_legal_positions = [
           [7, 4],
           [6, 3],
@@ -235,5 +231,101 @@ describe Board do
         ).to eq true_legal_positions
       end
     end
+  end
+
+  describe '#castle_availability' do
+    let(:coords) { [9, 6] }
+    let(:piece) { board.positions[9][6].occupant }
+
+    context 'when both castle options are available' do
+      it 'returns a list of two moves' do
+        empty_spaces = [[9, 3], [9, 4], [9, 5], [9, 7], [9, 8]]
+        empty_spaces.each do |coords|
+          board.positions[coords[0]][coords[1]].clear
+        end
+        legal_moves = board.castle_availability(coords, piece)
+
+        expect(legal_moves.length).to eq(2)
+      end
+    end
+
+    context 'when one castle option is available and the other is blocked by a piece' do
+      it 'returns a list of one move' do
+        empty_spaces = [[9, 4], [9, 5], [9, 7], [9, 8]]
+        empty_spaces.each do |coords|
+          board.positions[coords[0]][coords[1]].clear
+        end
+        legal_moves = board.castle_availability(coords, piece)
+
+        expect(legal_moves.length).to eq(1)
+      end
+    end
+
+    context 'when one castle option is available and the other is attacked by an enemy piece' do
+      it 'returns a list of two moves' do
+        coords = [2, 6]
+        piece = board.positions[coords[0]][coords[1]].occupant
+        empty_spaces = [[2, 3], [2, 4], [2, 5], [2, 7], [2, 8]]
+        empty_spaces.each do |coords|
+          board.positions[coords[0]][coords[1]].clear
+        end
+        board.positions[4][8].occupant = Knight.new(:white)
+        legal_moves = board.castle_availability(coords, piece)
+
+        expect(legal_moves.length).to eq(1)
+      end
+    end
+
+    context 'when one castle option is available while the other rook has already moved' do
+      it 'returns a list of one moves' do
+        empty_spaces = [[9, 3], [9, 4], [9, 5], [9, 7], [9, 8]]
+        empty_spaces.each do |coords|
+          board.positions[coords[0]][coords[1]].clear
+        end
+        rook = board.positions[9][2].occupant
+        rook_pos = [9, 2]
+        board.make_move(rook, rook_pos, [9, 3])
+        board.make_move(rook, [9, 3], rook_pos)
+        legal_moves = board.castle_availability(coords, piece)
+
+        expect(legal_moves.length).to eq(1)
+      end
+    end
+
+    context 'when neither castle option is available because the King is in check' do
+      it 'returns an empty list' do
+        empty_spaces = [[9, 3], [9, 4], [9, 5], [9, 7], [9, 8]]
+        empty_spaces.each do |coords|
+          board.positions[coords[0]][coords[1]].clear
+        end
+        board.positions[7][7].occupant = Knight.new(:black)
+        legal_moves = board.castle_availability(coords, piece)
+
+        expect(legal_moves.length).to eq(0)
+      end
+    end
+
+    context 'when neither castle option is available because the King has moved' do
+      it 'returns an empty list' do
+        empty_spaces = [[9, 3], [9, 4], [9, 5], [9, 7], [9, 8]]
+        empty_spaces.each do |coords|
+          board.positions[coords[0]][coords[1]].clear
+        end
+        board.make_move(piece, coords, [9, 5])
+        board.make_move(piece, [9, 5], coords)
+        legal_moves = board.castle_availability(coords, piece)
+
+        expect(legal_moves.length).to eq(0)
+      end
+    end
+  end
+
+  describe '#en_passant_availability' do
+  end
+
+  describe '#pawn_capture_availability' do
+  end
+
+  describe '#pawn_double_step_availability' do
   end
 end
