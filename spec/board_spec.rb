@@ -358,6 +358,35 @@ describe Board do
   end
 
   describe '#pawn_capture_availability' do
+    let(:pawn) { board.positions[8][4].occupant }
+    coords = [8, 4]
+
+    context 'when two pieces are available for capture' do
+      it 'returns a list of two moves' do
+        board.positions[7][3].occupant = Knight.new(:black)
+        board.positions[7][5].occupant = Queen.new(:black)
+        legal_moves = board.pawn_capture_availability(coords, pawn)
+
+        expect(legal_moves.length).to eq(2)
+      end
+    end
+
+    context 'when one piece is available for capture' do
+      it 'returns a list of one move' do
+        board.positions[7][3].occupant = Knight.new(:black)
+        legal_moves = board.pawn_capture_availability(coords, pawn)
+
+        expect(legal_moves.length).to eq(1)
+      end
+    end
+
+    context 'when no pieces are available for capture' do
+      it 'returns an empty list' do
+        legal_moves = board.pawn_capture_availability(coords, pawn)
+
+        expect(legal_moves.length).to eq(0)
+      end
+    end
   end
 
   describe '#pawn_double_step_availability' do
