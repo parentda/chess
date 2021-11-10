@@ -390,5 +390,33 @@ describe Board do
   end
 
   describe '#pawn_double_step_availability' do
+    let(:pawn) { board.positions[8][4].occupant }
+    coords = [8, 4]
+
+    context 'when double step is available' do
+      it 'returns a list of one move' do
+        legal_moves = board.pawn_double_step_availability(coords, pawn)
+
+        expect(legal_moves.length).to eq(1)
+      end
+    end
+
+    context 'when double step is unavailable due to a blocking piece' do
+      it 'returns an empty list' do
+        board.positions[7][4].occupant = Knight.new(:white)
+        legal_moves = board.pawn_double_step_availability(coords, pawn)
+
+        expect(legal_moves.length).to eq(0)
+      end
+    end
+
+    context 'when double step is unavailable due the piece already having moved' do
+      it 'returns an empty list' do
+        board.make_move(pawn, coords, [8, 5])
+        legal_moves = board.pawn_double_step_availability([8, 5], pawn)
+
+        expect(legal_moves.length).to eq(1)
+      end
+    end
   end
 end
