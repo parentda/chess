@@ -321,7 +321,17 @@ class Board
     end
   end
 
-  def mate?(attacking_color, defending_color); end
+  def mate?(defending_color)
+    piece_list[defending_color].each do |hash|
+      position = hash[:position]
+
+      pseudo_legal_moves_list = pseudo_legal_moves(position)
+      legal_moves_list = legal_moves(position, pseudo_legal_moves_list)
+
+      return false unless legal_moves_list.empty?
+    end
+    true
+  end
 
   def stalemate?(attacking_color, defending_color); end
 
@@ -396,6 +406,8 @@ class Board
 
   def en_passant_availability(coords, piece)
     available_moves = []
+    return available_moves if moves_list.empty?
+
     prev_move = @moves_list.last[0]
 
     if piece.is_a?(Pawn) && !prev_move.nil? && prev_move[:piece].is_a?(Pawn) &&
@@ -468,9 +480,9 @@ class Board
     [create_move(piece, start_position, end_position)]
   end
 
-  def promotion_available?; end
+  def promote_available?; end
 
-  def promotion; end
+  def promote; end
 
   ################################################################
 
