@@ -464,4 +464,60 @@ describe Board do
       end
     end
   end
+
+  describe '#stalemate' do
+    attacking_color = :black
+    defending_color = :white
+
+    context 'when the game begins' do
+      it 'returns false' do
+        expect(board).not_to be_stalemate(attacking_color, defending_color)
+      end
+    end
+
+    context 'when one side is in checkmate' do
+      it 'returns false' do
+        [[9, 7], [9, 8], [9, 9]].each do |coords|
+          board.make_move(
+            board.positions[coords[0]][coords[1]].occupant,
+            coords,
+            nil
+          )
+        end
+
+        black_queen = board.positions[2][5].occupant
+        board.make_move(black_queen, [2, 5], [9, 9])
+
+        expect(board).not_to be_stalemate(attacking_color, defending_color)
+      end
+    end
+
+    context 'when the game is in a stalemate' do
+      it 'returns true' do
+        pieces_to_remove =
+          [2, 3, 8, 9].product((2..9).to_a).reject do |coords|
+            [[2, 2], [2, 6], [9, 6]].include?(coords)
+          end
+
+        pieces_to_remove.each do |coords|
+          board.make_move(
+            board.positions[coords[0]][coords[1]].occupant,
+            coords,
+            nil
+          )
+        end
+
+        black_rook = board.positions[2][2].occupant
+        board.make_move(black_rook, [2, 2], [7, 3])
+
+        black_king = board.positions[2][6].occupant
+        board.make_move(black_king, [2, 6], [7, 2])
+
+        white_king = board.positions[9][6].occupant
+        board.make_move(white_king, [9, 6], [9, 2])
+
+        expect(board).to be_stalemate(attacking_color, defending_color)
+      end
+    end
+  end
 end
