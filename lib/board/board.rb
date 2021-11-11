@@ -88,7 +88,9 @@ class Board
     2.times { @positions.push(Array.new(SIZE + 4)) }
   end
 
-  def display
+  def display(moves_list = nil)
+    add_overlay
+
     output = ''
     @positions.each_with_index do |row, i|
       next if row[2].nil?
@@ -103,6 +105,10 @@ class Board
     # system 'clear'
     puts output
   end
+
+  def add_overlay; end
+
+  def to_string; end
 
   def valid_input?(string)
     return false unless string.length == 2
@@ -507,7 +513,23 @@ class Board
     false
   end
 
-  def promote; end
+  def promote(replacement)
+    prev_turn = @moves_list.last
+    move = prev_turn.find { |move| move[:piece].is_a?(Pawn) }
+    return if move.nil?
+
+    old_piece = move[:piece]
+    end_position = move[:end_position]
+    new_piece =
+      [Queen, Rook, Bishop, Knight][replacement - 1].new(old_piece.color)
+    turn = []
+
+    turn << create_move(old_piece, end_position, nil)
+    turn << create_move(new_piece, nil, end_position)
+
+    update_board(turn, :forward)
+    turn.each { |move| prev_turn << move }
+  end
 
   ################################################################
 
