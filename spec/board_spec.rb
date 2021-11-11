@@ -554,6 +554,7 @@ describe Board do
         white_pawn = board.positions[8][2].occupant
         board.make_move(white_pawn, [8, 2], [3, 3])
         board.make_move(white_pawn, [3, 3], [2, 4], :pawn_capture)
+        board.display
 
         expect(board).to be_promote_available
       end
