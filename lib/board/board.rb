@@ -327,7 +327,10 @@ class Board
     check?(attacking_color, defending_color) && no_legal_moves?(defending_color)
   end
 
-  def stalemate?(attacking_color, defending_color); end
+  def stalemate?(attacking_color, defending_color)
+    !check?(attacking_color, defending_color) &&
+      no_legal_moves?(defending_color)
+  end
 
   def no_legal_moves?(color)
     piece_list[color].each do |hash|
@@ -368,9 +371,8 @@ class Board
 
     shift.each_with_index do |step, index|
       if step == rook_pos
-        unless @positions[coords[0]][coords[1] + step].occupant.move_count.zero?
-          return false
-        end
+        piece = @positions[coords[0]][coords[1] + step].occupant
+        return false unless piece.is_a?(Rook) && piece.move_count.zero?
       else
         if index.zero?
           if PIECE_TYPES.any? do |piece_type|
