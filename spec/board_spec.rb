@@ -520,4 +520,43 @@ describe Board do
       end
     end
   end
+
+  describe '#promote_available?' do
+    context 'when the game begins' do
+      it 'returns false' do
+        expect(board).not_to be_promote_available
+      end
+    end
+
+    context 'when white pawn moves to empty square on last row' do
+      it 'returns true' do
+        board.positions[2][2].clear
+        white_pawn = board.positions[8][2].occupant
+        board.make_move(white_pawn, [8, 2], [2, 2])
+
+        expect(board).to be_promote_available
+      end
+    end
+
+    context 'when black pawn moves to empty square on last row' do
+      it 'returns true' do
+        board.positions[9][2].clear
+        black_pawn = board.positions[3][2].occupant
+        board.make_move(black_pawn, [3, 2], [9, 2])
+
+        expect(board).to be_promote_available
+      end
+    end
+
+    context 'when white pawn captures black piece to move to last row' do
+      it 'returns true' do
+        board.positions[3][3].clear
+        white_pawn = board.positions[8][2].occupant
+        board.make_move(white_pawn, [8, 2], [3, 3])
+        board.make_move(white_pawn, [3, 3], [2, 4], :pawn_capture)
+
+        expect(board).to be_promote_available
+      end
+    end
+  end
 end
