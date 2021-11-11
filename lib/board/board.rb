@@ -488,7 +488,24 @@ class Board
     [create_move(piece, start_position, end_position)]
   end
 
-  def promote_available?; end
+  def promote_available?
+    return false if moves_list.empty?
+
+    prev_turn = @moves_list.last
+    prev_turn.each do |move|
+      piece = move[:piece]
+
+      next unless piece.is_a?(Pawn)
+
+      next if move[:end_position].nil?
+
+      if (piece.color == :white && move[:end_position][0] == 2) ||
+           (piece.color == :black && move[:end_position][0] == 9)
+        return true
+      end
+    end
+    false
+  end
 
   def promote; end
 
