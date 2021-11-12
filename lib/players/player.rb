@@ -1,5 +1,5 @@
 class Player
-  def initialize(colour)
-    @colour = colour
+  def initialize(color)
+    @color = color
   end
 end
