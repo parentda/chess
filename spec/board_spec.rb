@@ -167,10 +167,7 @@ describe Board do
         board.make_move(white_bishop, [9, 4], [8, 5])
         board.make_move(black_queen, [2, 5], [5, 2])
         true_legal_positions = [[7, 4], [6, 3], [5, 2]]
-        pseudo_legal_positions = board.pseudo_legal_moves([8, 5])
-        expect(
-          board.legal_moves([8, 5], pseudo_legal_positions)
-        ).to eq true_legal_positions
+        expect(board.legal_moves([8, 5])).to eq true_legal_positions
       end
     end
 
@@ -183,10 +180,7 @@ describe Board do
         board.make_move(white_queen, [9, 5], [7, 9])
         board.make_move(black_queen, [2, 5], [4, 6])
         true_legal_positions = [[4, 6], [7, 6]]
-        pseudo_legal_positions = board.pseudo_legal_moves([7, 9])
-        expect(
-          board.legal_moves([7, 9], pseudo_legal_positions)
-        ).to eq true_legal_positions
+        expect(board.legal_moves([7, 9])).to eq true_legal_positions
       end
     end
 
@@ -202,10 +196,7 @@ describe Board do
         board.make_move(black_pawn, [3, 6], [5, 6])
         board.moves_list
         true_legal_positions = [[4, 5]]
-        pseudo_legal_positions = board.pseudo_legal_moves([5, 5])
-        expect(
-          board.legal_moves([5, 5], pseudo_legal_positions)
-        ).to eq true_legal_positions
+        expect(board.legal_moves([5, 5])).to eq true_legal_positions
       end
     end
 
@@ -225,10 +216,7 @@ describe Board do
           [5, 8],
           [4, 9]
         ].sort
-        pseudo_legal_positions = board.pseudo_legal_moves([8, 5])
-        expect(
-          board.legal_moves([8, 5], pseudo_legal_positions).sort
-        ).to eq true_legal_positions
+        expect(board.legal_moves([8, 5]).sort).to eq true_legal_positions
       end
     end
   end
