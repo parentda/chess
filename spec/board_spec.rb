@@ -554,9 +554,64 @@ describe Board do
         white_pawn = board.positions[8][2].occupant
         board.make_move(white_pawn, [8, 2], [3, 3])
         board.make_move(white_pawn, [3, 3], [2, 4], :pawn_capture)
-        board.display
 
         expect(board).to be_promote_available
+      end
+    end
+  end
+
+  describe '#promote' do
+    context 'when the previous move does not contain a valid Pawn for promotion' do
+      it 'returns nil' do
+        expect(board.promote(1)).to be_nil
+      end
+    end
+
+    context 'when promotion is available and 5 is given as an input' do
+      it 'returns nil and does not change the board' do
+        board.positions[3][3].clear
+        white_pawn = board.positions[8][2].occupant
+
+        board.make_move(white_pawn, [8, 2], [3, 3])
+        board.make_move(white_pawn, [3, 3], [2, 4], :pawn_capture)
+
+        expect(board.promote(5)).to be_nil
+      end
+    end
+
+    context 'when promotion is available and 1 is given as an input' do
+      it 'replaces the Pawn with a Queen of the same color' do
+        board.positions[3][3].clear
+        white_pawn = board.positions[8][2].occupant
+
+        board.make_move(white_pawn, [8, 2], [3, 3])
+        board.make_move(white_pawn, [3, 3], [2, 4], :pawn_capture)
+
+        board.promote(1)
+
+        piece_type = board.positions[2][4].occupant.class
+        piece_color = board.positions[2][4].occupant.color
+
+        expect(piece_type).to eq Queen
+        expect(piece_color).to eq :white
+      end
+    end
+
+    context 'when promotion is available and 4 is given as an input' do
+      it 'replaces the Pawn with a Knight of the same color' do
+        board.positions[3][3].clear
+        white_pawn = board.positions[8][2].occupant
+
+        board.make_move(white_pawn, [8, 2], [3, 3])
+        board.make_move(white_pawn, [3, 3], [2, 4], :pawn_capture)
+
+        board.promote(4)
+
+        piece_type = board.positions[2][4].occupant.class
+        piece_color = board.positions[2][4].occupant.color
+
+        expect(piece_type).to eq Knight
+        expect(piece_color).to eq :white
       end
     end
   end
