@@ -13,7 +13,7 @@ class Board
   LIGHT_SQUARE = :on_light_yellow
   DARK_SQUARE = :on_yellow
   CAPTURE_SQUARE = :on_red
-  SELECT_SQUARE = :on_green
+  SELECT_SQUARE = :on_blue
   MOVE_MARKER = "\u25CF".blue
 
   PIECE_TYPES = [Queen, Rook, Bishop, Knight, Pawn, King].freeze
@@ -89,11 +89,34 @@ class Board
     2.times { @positions.push(Array.new(SIZE + 4)) }
   end
 
-  def display(selected_piece = nil, moves_list = nil)
-    # add_overlay
+  def display(selected_coords = nil, moves_list = nil)
+    if selected_coords.nil? || moves_list.nil?
+      grid = @positions
+    else
+      positions_serialized = Marshal.dump(@positions)
+      grid = Marshal.load(positions_serialized)
+      add_overlay(grid, selected_coords, moves_list)
+    end
 
+    to_string(grid)
+  end
+
+  def add_overlay(grid, selected_coords, moves_list)
+    grid[selected_coords[0]][selected_coords[1]].background_color =
+      SELECT_SQUARE
+
+    moves_list.each do |move|
+      if grid[move[0]][move[1]].empty?
+        grid[move[0]][move[1]].occupant = MOVE_MARKER
+      else
+        grid[move[0]][move[1]].background_color = CAPTURE_SQUARE
+      end
+    end
+  end
+
+  def to_string(grid)
     output = ''
-    @positions.each_with_index do |row, i|
+    grid.each_with_index do |row, i|
       next if row[2].nil?
 
       output << "\t#{SIZE + 2 - i} "
@@ -106,10 +129,6 @@ class Board
     # system 'clear'
     puts output
   end
-
-  def add_overlay; end
-
-  def to_string; end
 
   def valid_input?(string)
     return false unless string.length == 2
@@ -612,9 +631,9 @@ time = fin - start
 p "Time: #{time}"
 p "Legal moves: #{legal_moves_list}"
 
-legal_moves_list.each do |move|
-  @board.positions[move[0]][move[1]].background_color = :on_red
-end
+# legal_moves_list.each do |move|
+#   @board.positions[move[0]][move[1]].background_color = :on_red
+# end
 
 # start = Time.now
 # @board.check?(:black, :white)
