@@ -13,8 +13,8 @@ class Board
   LIGHT_SQUARE = :on_light_yellow
   DARK_SQUARE = :on_yellow
   CAPTURE_SQUARE = :on_red
-  SELECT_SQUARE = :on_blue
-  MOVE_MARKER = "\u25CF".blue
+  SELECT_SQUARE = { white: :on_blue, black: :on_green }.freeze
+  MOVE_MARKER = { white: "\u25CF".blue, black: "\u25CF".green }.freeze
 
   PIECE_TYPES = [Queen, Rook, Bishop, Knight, Pawn, King].freeze
   FIRST_RANK = [Rook, Knight, Bishop, Queen, King, Bishop, Knight, Rook].freeze
@@ -102,12 +102,13 @@ class Board
   end
 
   def add_overlay(grid, selected_coords, moves_list)
+    color = grid[selected_coords[0]][selected_coords[1]].occupant.color
     grid[selected_coords[0]][selected_coords[1]].background_color =
-      SELECT_SQUARE
+      SELECT_SQUARE[color]
 
     moves_list.each do |move|
       if grid[move[0]][move[1]].empty?
-        grid[move[0]][move[1]].occupant = MOVE_MARKER
+        grid[move[0]][move[1]].occupant = MOVE_MARKER[color]
       else
         grid[move[0]][move[1]].background_color = CAPTURE_SQUARE
       end
