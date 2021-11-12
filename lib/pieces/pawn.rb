@@ -12,7 +12,7 @@ class Pawn < Piece
 
   def capture_set
     @capture_set ||=
-      @color == :black ? [[[1, 1], [1, -1]]] : [[[-1, 1], [-1, -1]]]
+      @color == :black ? [[[1, 1]], [[1, -1]]] : [[[-1, 1]], [[-1, -1]]]
   end
 
   def symbol
