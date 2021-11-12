@@ -13,6 +13,7 @@ class Board
   LIGHT_SQUARE = :on_light_yellow
   DARK_SQUARE = :on_yellow
   CAPTURE_SQUARE = :on_red
+  SELECT_SQUARE = :on_green
   MOVE_MARKER = "\u25CF".blue
 
   PIECE_TYPES = [Queen, Rook, Bishop, Knight, Pawn, King].freeze
@@ -88,7 +89,7 @@ class Board
     2.times { @positions.push(Array.new(SIZE + 4)) }
   end
 
-  def display(moves_list = nil)
+  def display(selected_piece = nil, moves_list = nil)
     # add_overlay
 
     output = ''
@@ -177,10 +178,13 @@ class Board
     special_moves
   end
 
-  def legal_moves(coords, pseudo_legal_moves_list)
+  def legal_moves(coords)
     legal_moves_list = []
+    pseudo_legal_moves_list = pseudo_legal_moves(coords)
 
     piece = @positions[coords[0]][coords[1]].occupant
+    return legal_moves_list unless piece.is_a?(Piece)
+
     defending_color = piece.color
     attacking_color = COLORS.find { |color| color != defending_color }
 
@@ -342,8 +346,7 @@ class Board
     piece_list[color].each do |hash|
       position = hash[:position]
 
-      pseudo_legal_moves_list = pseudo_legal_moves(position)
-      legal_moves_list = legal_moves(position, pseudo_legal_moves_list)
+      legal_moves_list = legal_moves(position)
 
       return false unless legal_moves_list.empty?
     end
@@ -541,11 +544,10 @@ class Board
     start = Time.now
     @piece_list.each_value do |list|
       list.each do |piece|
-        # p "Piece: #{piece}"
-        pseudo_moves = pseudo_legal_moves(piece[:position])
+        # p "Piece: #{piece}
 
         # p "Pseudo-legal moves: #{pseudo_moves}"
-        legal_moves = legal_moves(piece[:position], pseudo_moves)
+        legal_moves = legal_moves(piece[:position])
         p "Legal moves: #{legal_moves}"
       end
     end
@@ -604,7 +606,7 @@ pseudo_legal_moves_list = @board.pseudo_legal_moves([5, 5])
 p "Pseudo-legal moves: #{pseudo_legal_moves_list}"
 
 start = Time.now
-legal_moves_list = @board.legal_moves([5, 5], pseudo_legal_moves_list)
+legal_moves_list = @board.legal_moves([5, 5])
 fin = Time.now
 time = fin - start
 p "Time: #{time}"
