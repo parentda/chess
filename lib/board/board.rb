@@ -89,7 +89,7 @@ class Board
   end
 
   def display(moves_list = nil)
-    add_overlay
+    # add_overlay
 
     output = ''
     @positions.each_with_index do |row, i|
@@ -514,12 +514,16 @@ class Board
   end
 
   def promote(replacement)
-    prev_turn = @moves_list.last
-    move = prev_turn.find { |move| move[:piece].is_a?(Pawn) }
-    return if move.nil?
+    return unless replacement.between?(1, 4)
 
-    old_piece = move[:piece]
-    end_position = move[:end_position]
+    prev_turn = @moves_list.last
+    return if prev_turn.nil?
+
+    prev_move = prev_turn.find { |move| move[:piece].is_a?(Pawn) }
+    return if prev_move.nil?
+
+    old_piece = prev_move[:piece]
+    end_position = prev_move[:end_position]
     new_piece =
       [Queen, Rook, Bishop, Knight][replacement - 1].new(old_piece.color)
     turn = []
