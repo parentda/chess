@@ -28,4 +28,8 @@ class Game
     @current_player = @players.first
     game_start_prompt(@board, @players)
   end
+
+  def game_end
+    @game_over ? win_prompt(@current_player) : tie_prompt
+  end
 end
