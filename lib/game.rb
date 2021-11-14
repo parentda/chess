@@ -29,6 +29,26 @@ class Game
     game_start_prompt(@board, @players)
   end
 
+  def game_loop
+    until @board.full?
+      player_turn
+      return @game_over = true if @board.game_over?
+
+      switch_player
+    end
+  end
+
+  def player_turn
+    column = player_input
+    @board.update_board(column, @current_player.marker)
+    @board.display
+  end
+
+  def switch_player
+    @players.rotate!
+    @current_player = @players.first
+  end
+
   def game_end
     @game_over ? win_prompt(@current_player) : tie_prompt
   end
