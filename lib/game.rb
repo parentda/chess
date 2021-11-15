@@ -55,6 +55,15 @@ class Game
     @game_over ? win_prompt(@current_player) : tie_prompt
   end
 
+  def save
+    serialized_file = serialize
+    Dir.mkdir(@@saved_games_folder) unless Dir.exist?(@@saved_games_folder)
+    filename = "#{@output_array.join(' ')}.yaml"
+    filepath = "#{@@saved_games_folder}/#{filename}"
+    File.write(filepath, serialized_file)
+    puts save_game_message(filename)
+  end
+
   def serialize
     YAML.dump(self)
   end
