@@ -32,6 +32,10 @@ class Game
     Hash[(1..saved_games.size).zip saved_games]
   end
 
+  def self.display_saved_files(hash)
+    puts display_saved_games(hash)
+  end
+
   def play
     game_setup
     game_loop
