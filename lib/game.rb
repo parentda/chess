@@ -75,6 +75,15 @@ class Game
     end
   end
 
+  def self.restart
+    restart_message
+    gets.chomp.downcase == 'y'
+  end
+
+  def self.close
+    close_message
+  end
+
   def play
     game_setup
     game_loop
