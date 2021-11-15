@@ -13,6 +13,17 @@ class Game
     @setup_complete = false
   end
 
+  def self.user_input(prompt, warning, match_criteria)
+    puts prompt
+    input = gets.chomp.upcase
+    raise warning unless input.match?(match_criteria)
+
+    input
+  rescue StandardError => e
+    puts e
+    retry
+  end
+
   def self.open_saved_file
     saved_games = find_saved_files
     return saved_games if saved_games.nil?
