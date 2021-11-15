@@ -2,7 +2,7 @@ require_relative 'game'
 
 def play_game
   loop do
-    game = Game.new
+    game = Game.create_game
     game.play
     break Game.close unless Game.restart
   end
