@@ -36,6 +36,11 @@ class Game
     puts display_saved_games(hash)
   end
 
+  def self.load_saved_file(filepath)
+    saved_game = File.read(filepath)
+    YAML.load(saved_game)
+  end
+
   def play
     game_setup
     game_loop
