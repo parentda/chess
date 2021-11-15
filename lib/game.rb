@@ -57,6 +57,10 @@ class Game
       .to_i
   end
 
+  def self.game_mode
+    Game.user_input(Game.game_mode_prompt, Game.warning_prompt_invalid, /[1-2]/)
+  end
+
   def play
     game_setup
     game_loop
