@@ -13,6 +13,16 @@ class Game
     @setup_complete = false
   end
 
+  def self.open_saved_file
+    saved_games = find_saved_files
+    return saved_games if saved_games.nil?
+
+    display_saved_files(saved_games)
+    file_num = get_file_num(saved_games)
+    puts load_game_prompt(saved_games[file_num])
+    load_saved_file("#{@@saved_games_folder}/#{saved_games[file_num]}")
+  end
+
   def play
     game_setup
     game_loop
