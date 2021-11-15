@@ -23,6 +23,15 @@ class Game
     load_saved_file("#{@@saved_games_folder}/#{saved_games[file_num]}")
   end
 
+  def self.find_saved_files
+    saved_games = Dir.glob('*.yaml', base: @@saved_games_folder)
+    if saved_games.empty?
+      puts no_saved_games_prompt
+      return nil
+    end
+    Hash[(1..saved_games.size).zip saved_games]
+  end
+
   def play
     game_setup
     game_loop
