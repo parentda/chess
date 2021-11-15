@@ -41,6 +41,11 @@ class Game
     YAML.load(saved_game)
   end
 
+  def self.get_file_num(games_list)
+    user_input(saved_game_prompt, warning_prompt_invalid, /#{games_list.keys}/)
+      .to_i
+  end
+
   def play
     game_setup
     game_loop
