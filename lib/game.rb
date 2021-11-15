@@ -44,6 +44,8 @@ class Game
     @board.display
   end
 
+  def undo_turn; end
+
   def switch_player
     @players.rotate!
     @current_player = @players.first
@@ -51,5 +53,9 @@ class Game
 
   def game_end
     @game_over ? win_prompt(@current_player) : tie_prompt
+  end
+
+  def serialize
+    YAML.dump(self)
   end
 end
