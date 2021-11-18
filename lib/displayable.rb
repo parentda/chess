@@ -6,4 +6,8 @@ module Displayable
   def close_message
     puts "\nThanks for playing!"
   end
+
+  def save_game_message(filepath)
+    "\nYour game has been saved as:  #{filepath.blue}"
+  end
 end
