@@ -27,8 +27,16 @@ module Displayable
 
   def new_game_prompt
     <<~HEREDOC
-    
+
     Starting new game...
+    #{SECTION_BREAK}
+    HEREDOC
+  end
+
+  def load_game_prompt(filename)
+    <<~HEREDOC
+    
+    Loading #{filename}...
     #{SECTION_BREAK}
     HEREDOC
   end
