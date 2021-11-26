@@ -1,19 +1,30 @@
-require_relative '../board'
+require_relative 'board/board'
+require_relative 'displayable'
 
 class Game
   include Displayable
 
   attr_reader :players, :current_player, :game_over, :board
 
+  @@saved_games_folder = 'saved_games'
+
   def initialize
     @board = Board.new
     @players = []
     @current_player = nil
     @game_over = false
+    @game_won = false
+    @game_mode = nil
     @setup_complete = false
   end
 
-  def self.user_input(prompt, warning, match_criteria)
+  def self.user_input(
+    prompt,
+    warning,
+    match_criteria,
+    negate_matcher = false,
+    input_modifier = nil
+  )
     puts prompt
     input = gets.chomp.upcase
     raise warning unless input.match?(match_criteria)
@@ -58,7 +69,7 @@ class Game
   end
 
   def self.game_mode
-    Game.user_input(Game.game_mode_prompt, Game.warning_prompt_invalid, /[1-2]/)
+    Game.user_input(Game.game_mode_prompt, Game.warning_prompt_invalid, /[1-3]/)
   end
 
   def self.create_game(min_word_length, max_word_length, lives)
@@ -123,13 +134,13 @@ class Game
   end
 
   def game_end
-    @game_over ? win_prompt(@current_player) : tie_prompt
+    @game_won ? win_prompt(@current_player) : tie_prompt
   end
 
   def save
     serialized_file = serialize
     Dir.mkdir(@@saved_games_folder) unless Dir.exist?(@@saved_games_folder)
-    filename = "#{@output_array.join(' ')}.yaml"
+    filename = "#{Game.user_input}.yaml"
     filepath = "#{@@saved_games_folder}/#{filename}"
     File.write(filepath, serialized_file)
     puts save_game_message(filename)
