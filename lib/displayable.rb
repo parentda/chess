@@ -59,4 +59,8 @@ module Displayable
     3 - Computer vs. Computer
     HEREDOC
   end
+
+  def saved_game_prompt
+    'Please input a number corresponding to a file listed above: '
+  end
 end
