@@ -25,7 +25,7 @@ module Displayable
     HEREDOC
   end
 
-  def new_game_prompt
+  def new_game_message
     <<~HEREDOC
 
     Starting new game...
@@ -33,11 +33,20 @@ module Displayable
     HEREDOC
   end
 
-  def load_game_prompt(filename)
+  def load_game_message(filename)
     <<~HEREDOC
-    
+
     Loading #{filename}...
     #{SECTION_BREAK}
+    HEREDOC
+  end
+
+  def game_load_prompt
+    <<~HEREDOC
+    Would you like to start a new game or load a saved game?
+
+    1 - Start a new game
+    2 - Load a previously saved game
     HEREDOC
   end
 end
