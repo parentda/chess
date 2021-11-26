@@ -77,6 +77,15 @@ module Displayable
     HEREDOC
   end
 
+  def select_color_prompt
+    <<~HEREDOC
+    Please select the player color:
+
+    1 - White
+    2 - Black
+    HEREDOC
+  end
+
   def saved_game_prompt
     'Please input a number corresponding to a file listed above: '
   end
