@@ -2,7 +2,6 @@ require 'pry-byebug'
 require 'require_all'
 require_rel '../pieces'
 require_rel 'square'
-require_rel '../move'
 
 class Board
   attr_accessor :positions, :piece_list, :moves_list
@@ -143,7 +142,7 @@ class Board
     [row, col]
   end
 
-  def valid_selection(coords, valid_choice_list)
+  def valid_selection?(coords, valid_choice_list)
     valid_choice_list.include?(coords)
   end
 
