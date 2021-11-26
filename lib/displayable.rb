@@ -8,6 +8,18 @@ module Displayable
   end
 
   def save_game_message(filepath)
-    "\nYour game has been saved as:  #{filepath.blue}"
+    puts "\nYour game has been saved as:  #{filepath.blue}"
+  end
+
+  def display_saved_games(hash)
+    output = ''
+    hash.each { |key, value| output += "#{key.to_s.blue}:  #{value}\n" }
+
+    <<~HEREDOC
+    
+    Saved Games:
+    
+    #{output}
+    HEREDOC
   end
 end
