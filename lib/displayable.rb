@@ -49,4 +49,14 @@ module Displayable
     2 - Load a previously saved game
     HEREDOC
   end
+
+  def game_mode_prompt
+    <<~HEREDOC
+    Please select one of the following game modes:
+
+    1 - Player vs. Player
+    2 - Player vs. Computer
+    3 - Computer vs. Computer
+    HEREDOC
+  end
 end
