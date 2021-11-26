@@ -1,4 +1,6 @@
 module Displayable
+  SECTION_BREAK = '-' * 100
+
   def restart_message
     puts "\n\nWould you like to play again? Enter (Y/y) to start a new game/load a saved game, or any other key to quit:"
   end
@@ -16,10 +18,18 @@ module Displayable
     hash.each { |key, value| output += "#{key.to_s.blue}:  #{value}\n" }
 
     <<~HEREDOC
-    
+
     Saved Games:
     
     #{output}
+    HEREDOC
+  end
+
+  def new_game_prompt
+    <<~HEREDOC
+    
+    Starting new game...
+    #{SECTION_BREAK}
     HEREDOC
   end
 end
