@@ -67,4 +67,8 @@ module Displayable
   def no_saved_games_prompt
     "\nThere are no saved games. Please start a new game.".red
   end
+
+  def warning_prompt_invalid
+    "\nSorry, that input is invalid".red
+  end
 end
