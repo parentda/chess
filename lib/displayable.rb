@@ -63,4 +63,8 @@ module Displayable
   def saved_game_prompt
     'Please input a number corresponding to a file listed above: '
   end
+
+  def no_saved_games_prompt
+    "\nThere are no saved games. Please start a new game.".red
+  end
 end
