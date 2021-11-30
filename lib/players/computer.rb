@@ -1,2 +1,4 @@
-class Computer
+require_relative 'player'
+
+class Computer < Player
 end

@@ -1,5 +1,6 @@
 require_relative 'board/board'
-require_relative 'displayable'
+require_relative 'display/class_displayable'
+require_relative 'display/instance_displayable'
 
 class Game
   include Displayable
@@ -69,11 +70,11 @@ class Game
   end
 
   def self.game_mode
-    Game.user_input(Game.game_mode_prompt, Game.warning_prompt_invalid, /[1-3]/)
+    user_input(game_mode_prompt, warning_prompt_invalid, /[1-3]/)
   end
 
-  def self.create_game(min_word_length, max_word_length, lives)
-    puts intro_message(min_word_length, max_word_length, lives)
+  def self.create_game
+    puts intro_message
     loop do
       mode = game_mode
       if mode == '1'
