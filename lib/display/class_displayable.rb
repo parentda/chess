@@ -1,4 +1,6 @@
 module ClassDisplayable
+  SECTION_BREAK = '-' * 100
+
   def intro_message
     puts <<~HEREDOC
     
@@ -10,11 +12,11 @@ module ClassDisplayable
 
       http://www.chessvariants.org/d.chess/chess.html
     
-
     Each turn requires two separate inputs:
 
-      1 - Coordinates of the piece to move
-      2 - Coordinates of a legal move for the selected piece
+      [1] Coordinates of the piece to move
+      [2] Coordinates of a legal move for the selected piece
+
     HEREDOC
   end
 
@@ -22,7 +24,7 @@ module ClassDisplayable
     output = ''
     hash.each { |key, value| output += "#{key.to_s.blue}:  #{value}\n" }
 
-    <<~HEREDOC
+    puts <<~HEREDOC
 
     Saved Games:
     
@@ -31,7 +33,7 @@ module ClassDisplayable
   end
 
   def new_game_message
-    <<~HEREDOC
+    puts <<~HEREDOC
 
     Starting new game...
     #{SECTION_BREAK}
@@ -39,7 +41,7 @@ module ClassDisplayable
   end
 
   def load_game_message(filename)
-    <<~HEREDOC
+    puts <<~HEREDOC
 
     Loading #{filename}...
     #{SECTION_BREAK}
@@ -47,30 +49,35 @@ module ClassDisplayable
   end
 
   def saved_game_prompt
-    'Please input a number corresponding to a file listed above: '
+    puts 'Please input a number corresponding to a file listed above: '
   end
 
   def no_saved_games_prompt
-    "\nThere are no saved games. Please start a new game.".red
+    puts "\nThere are no saved games. Please start a new game.".red
   end
 
   def game_load_prompt
-    <<~HEREDOC
+    puts <<~HEREDOC
     Would you like to start a new game or load a saved game?
 
     1 - Start a new game
     2 - Load a previously saved game
+
     HEREDOC
   end
 
   def game_mode_prompt
-    <<~HEREDOC
+    puts <<~HEREDOC
     Please select one of the following game modes:
 
     1 - Player vs. Player
     2 - Player vs. Computer
     3 - Computer vs. Computer
     HEREDOC
+  end
+
+  def warning_prompt_invalid
+    puts "\nSorry, that input is invalid".red
   end
 
   def close_message
