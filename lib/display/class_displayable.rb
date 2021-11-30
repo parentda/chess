@@ -14,8 +14,9 @@ module ClassDisplayable
     
     Each turn requires two separate inputs:
 
-      [1] Coordinates of the piece to move
-      [2] Coordinates of a legal move for the selected piece
+        - Coordinates of the piece to move
+        - Coordinates of a legal move for the selected piece
+
 
     HEREDOC
   end
@@ -58,10 +59,10 @@ module ClassDisplayable
 
   def game_load_prompt
     puts <<~HEREDOC
-    Would you like to start a new game or load a saved game?
+    To begin, would you like to start a new game or load a saved game?
 
-    1 - Start a new game
-    2 - Load a previously saved game
+        [1] Start a new game
+        [2] Load a previously saved game
 
     HEREDOC
   end
@@ -70,14 +71,15 @@ module ClassDisplayable
     puts <<~HEREDOC
     Please select one of the following game modes:
 
-    1 - Player vs. Player
-    2 - Player vs. Computer
-    3 - Computer vs. Computer
+        [1] Player vs. Player
+        [2] Player vs. Computer
+        [3] Computer vs. Computer
+
     HEREDOC
   end
 
   def warning_prompt_invalid
-    puts "\nSorry, that input is invalid".red
+    'Sorry, that input is invalid. Please try again.'.red
   end
 
   def close_message
