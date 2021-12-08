@@ -74,7 +74,7 @@ class Game
   end
 
   def self.game_load
-    user_input(game_load_prompt, warning_prompt_invalid, /[1,2]/)
+    user_input(game_load_prompt, warning_prompt_invalid, %w[1 2])
   end
 
   def self.game_mode
