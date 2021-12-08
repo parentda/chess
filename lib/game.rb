@@ -78,7 +78,7 @@ class Game
   end
 
   def self.game_mode
-    user_input(game_mode_prompt, warning_prompt_invalid, /1, 2, 3/)
+    user_input(game_mode_prompt, warning_prompt_invalid, %w[1 2 3])
   end
 
   def self.create_game
