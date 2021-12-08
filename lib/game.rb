@@ -69,8 +69,7 @@ class Game
   end
 
   def self.get_file_num(games_list)
-    user_input(saved_game_prompt, warning_prompt_invalid, /#{games_list.keys}/)
-      .to_i
+    user_input(saved_game_prompt, warning_prompt_invalid, games_list.keys).to_i
   end
 
   def self.game_load
