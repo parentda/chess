@@ -27,14 +27,17 @@ class Game
     negate_matcher = false,
     input_modifier = nil
   )
-    puts prompt
-    input = gets.chomp.upcase
-    raise warning unless input.match?(match_criteria)
+    prompt
 
-    input
-  rescue StandardError => e
-    puts e
-    retry
+    begin
+      input = gets.chomp.upcase
+      raise warning unless match_criteria.include?(input)
+
+      input
+    rescue StandardError => e
+      puts e
+      retry
+    end
   end
 
   def self.open_saved_file
@@ -71,11 +74,11 @@ class Game
   end
 
   def self.game_load
-    user_input(game_load_prompt, warning_prompt_invalid, /[1-2]/)
+    user_input(game_load_prompt, warning_prompt_invalid, /[1,2]/)
   end
 
   def self.game_mode
-    user_input(game_mode_prompt, warning_prompt_invalid, /[1-3]/)
+    user_input(game_mode_prompt, warning_prompt_invalid, /1, 2, 3/)
   end
 
   def self.create_game
@@ -115,6 +118,8 @@ class Game
     @num_players.times { |num| create_player(num) }
     @current_player = @players.first
     game_start_prompt(@board, @players)
+
+    @setup_complete = true
   end
 
   def game_loop
