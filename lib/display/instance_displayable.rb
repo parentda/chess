@@ -11,8 +11,8 @@ module InstanceDisplayable
     puts <<~HEREDOC
     Please select the player color:
 
-    1 - White
-    2 - Black
+      #{'[1]'.green} White
+      #{'[2]'.green} Black
     HEREDOC
   end
 
