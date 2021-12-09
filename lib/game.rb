@@ -6,11 +6,13 @@ class Game
   include InstanceDisplayable
   extend ClassDisplayable
 
+  attr_reader :players, :current_player, :game_over, :board
+
   ROWS = %w[1 2 3 4 5 6 7 8].freeze
   COLUMNS = %w[A B C D E F G H].freeze
   POSITIONS = COLUMNS.product(ROWS).map { |arr| arr[0] + arr[1] }.freeze
 
-  attr_reader :players, :current_player, :game_over, :board
+  COMMANDS = ['SAVE', 'QUIT', 'UNDO', "\e[D\n"].freeze
 
   @@saved_games_folder = 'saved_games'
 
