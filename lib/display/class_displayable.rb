@@ -54,15 +54,15 @@ module ClassDisplayable
   end
 
   def no_saved_games_prompt
-    puts "\nThere are no saved games. Please start a new game.".red
+    puts "\nThere are no saved games. Please start a new game.".yellow
   end
 
   def game_load_prompt
     puts <<~HEREDOC
     To begin, would you like to start a new game or load a saved game?
 
-        [1] Start a new game
-        [2] Load a previously saved game
+        #{'[1]'.green} Start a new game
+        #{'[2]'.green} Load a saved game
 
     HEREDOC
   end
@@ -71,9 +71,9 @@ module ClassDisplayable
     puts <<~HEREDOC
     Please select one of the following game modes:
 
-        [1] Player vs. Player
-        [2] Player vs. Computer
-        [3] Computer vs. Computer
+        #{'[1]'.green} Player vs. Player
+        #{'[2]'.green} Player vs. Computer
+        #{'[3]'.green} Computer vs. Computer
 
     HEREDOC
   end
