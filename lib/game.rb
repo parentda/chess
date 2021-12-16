@@ -16,14 +16,14 @@ class Game
 
   @@saved_games_folder = 'saved_games'
 
-  def initialize(game_mode)
+  def initialize(game_mode, players)
     @board = Board.new
-    @players = []
+    @players = players
     @current_player = nil
     @game_over = false
     @game_won = false
     @game_mode = game_mode
-    @setup_complete = false
+    # @setup_complete = false
   end
 
   def self.user_input(
@@ -101,6 +101,18 @@ class Game
     end
   end
 
+  def self.game_setup
+    # return if @setup_complete
+
+    segment_break
+    introduction_prompt(@board)
+    @num_players.times { |num| create_player(num) }
+    @current_player = @players.first
+    game_start_prompt(@board, @players)
+
+    # @setup_complete = true
+  end
+
   def self.restart
     restart_message
     gets.chomp.downcase == 'y'
@@ -114,18 +126,6 @@ class Game
     game_setup
     game_loop
     game_end
-  end
-
-  def game_setup
-    return if @setup_complete
-
-    segment_break
-    introduction_prompt(@board)
-    @num_players.times { |num| create_player(num) }
-    @current_player = @players.first
-    game_start_prompt(@board, @players)
-
-    @setup_complete = true
   end
 
   def game_loop
