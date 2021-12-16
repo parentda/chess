@@ -12,7 +12,7 @@ class Game
   COLUMNS = %w[A B C D E F G H].freeze
   POSITIONS = COLUMNS.product(ROWS).map { |arr| arr[0] + arr[1] }.freeze
 
-  COMMANDS = ['SAVE', 'QUIT', 'UNDO', "\e[D\n"].freeze
+  COMMANDS = %w[SAVE QUIT UNDO].freeze
 
   @@saved_games_folder = 'saved_games'
 
@@ -87,6 +87,7 @@ class Game
   end
 
   def self.create_game
+    segment_break
     intro_message
     loop do
       mode = game_load
@@ -118,7 +119,7 @@ class Game
   def game_setup
     return if @setup_complete
 
-    segment_break_prompt
+    segment_break
     introduction_prompt(@board)
     @num_players.times { |num| create_player(num) }
     @current_player = @players.first
