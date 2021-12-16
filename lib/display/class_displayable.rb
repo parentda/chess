@@ -1,10 +1,10 @@
 module ClassDisplayable
-  SECTION_BREAK = '-' * 100
+  def segment_break
+    puts "\n#{'-' * 100}"
+  end
 
   def intro_message
     puts <<~HEREDOC
-    
-    #{SECTION_BREAK}
 
     Welcome to #{'CHESS'.blue}!
     
@@ -37,7 +37,6 @@ module ClassDisplayable
     puts <<~HEREDOC
 
     Starting new game...
-    #{SECTION_BREAK}
     HEREDOC
   end
 
@@ -45,7 +44,6 @@ module ClassDisplayable
     puts <<~HEREDOC
 
     Loading #{filename}...
-    #{SECTION_BREAK}
     HEREDOC
   end
 
