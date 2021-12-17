@@ -1,6 +1,7 @@
 require_relative 'board/board'
 require_relative 'display/class_displayable'
 require_relative 'display/instance_displayable'
+require_rel 'players'
 
 class Game
   include InstanceDisplayable
@@ -114,7 +115,18 @@ class Game
     new(game_mode, players_list)
   end
 
-  def self.create_players(game_mode); end
+  def self.create_players(game_mode)
+    case game_mode
+    when '1'
+      [Human.new(Board::COLORS[0]), Human.new(Board::COLORS[1])]
+    when '2'
+      [Human.new(Board::COLORS[0]), Computer.new(Board::COLORS[1])]
+    when '3'
+      [Computer.new(Board::COLORS[0]), Human.new(Board::COLORS[1])]
+    when '4'
+      [Computer.new(Board::COLORS[0]), Computer.new(Board::COLORS[1])]
+    end
+  end
 
   def self.restart
     restart_message
