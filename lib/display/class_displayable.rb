@@ -70,20 +70,21 @@ module ClassDisplayable
 
     Please select one of the following game modes:
 
-        #{'[1]'.green} Player vs. Player
-        #{'[2]'.green} Player vs. Computer
-        #{'[3]'.green} Computer vs. Computer
+        #{'[1]'.blue} Player vs. Player
+        #{'[2]'.blue} Player vs. Computer
+        #{'[3]'.blue} Computer vs. Computer
 
     HEREDOC
   end
 
   def select_color_prompt
     puts <<~HEREDOC
-    
+
     Please select the player color:
 
-      #{'[1]'.green} White
-      #{'[2]'.green} Black
+        #{'[1]'.red} White
+        #{'[2]'.red} Black
+    
     HEREDOC
   end
 
