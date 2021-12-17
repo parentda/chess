@@ -16,7 +16,7 @@ class Game
 
   @@saved_games_folder = 'saved_games'
 
-  def initialize(game_mode, players)
+  def initialize(game_mode, players = nil)
     @board = Board.new
     @players = players
     @current_player = nil
@@ -78,11 +78,11 @@ class Game
     user_input(saved_game_prompt, warning_prompt_invalid, games_list.keys).to_i
   end
 
-  def self.game_load
+  def self.input_game_load
     user_input(game_load_prompt, warning_prompt_invalid, %w[1 2])
   end
 
-  def self.game_mode
+  def self.input_game_mode
     user_input(game_mode_prompt, warning_prompt_invalid, %w[1 2 3])
   end
 
@@ -90,10 +90,12 @@ class Game
     segment_break
     intro_message
     loop do
-      mode = game_load
-      if mode == '1'
+      game_load = input_game_load
+      if game_load == '1'
+        game_mode = input_game_mode
         new_game_message
-        return new(mode)
+        segment_break
+        return new(game_mode)
       else
         loaded_game = open_saved_file
         return loaded_game unless loaded_game.nil?
@@ -113,6 +115,8 @@ class Game
     # @setup_complete = true
   end
 
+  def self.create_players(game_mode); end
+
   def self.restart
     restart_message
     gets.chomp.downcase == 'y'
@@ -123,7 +127,7 @@ class Game
   end
 
   def play
-    game_setup
+    # game_setup
     game_loop
     game_end
   end
