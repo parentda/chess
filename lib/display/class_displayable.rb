@@ -77,6 +77,16 @@ module ClassDisplayable
     HEREDOC
   end
 
+  def select_color_prompt
+    puts <<~HEREDOC
+    
+    Please select the player color:
+
+      #{'[1]'.green} White
+      #{'[2]'.green} Black
+    HEREDOC
+  end
+
   def warning_prompt_invalid
     'Sorry, that input is invalid. Please try again.'.red
   end
