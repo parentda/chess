@@ -95,12 +95,7 @@ class Game
     intro_message
     loop do
       game_load = input_game_load
-      if game_load == '1'
-        game_setup
-      else
-        loaded_game = open_saved_file
-        return loaded_game unless loaded_game.nil?
-      end
+      game_load == '1' ? game_setup : open_saved_file
     end
   end
 
