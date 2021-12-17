@@ -17,7 +17,6 @@ module ClassDisplayable
         - Coordinates of the piece to move
         - Coordinates of a legal move for the selected piece
 
-
     HEREDOC
   end
 
@@ -57,6 +56,7 @@ module ClassDisplayable
 
   def game_load_prompt
     puts <<~HEREDOC
+
     To begin, would you like to start a new game or load a saved game?
 
         #{'[1]'.green} Start a new game
@@ -67,6 +67,7 @@ module ClassDisplayable
 
   def game_mode_prompt
     puts <<~HEREDOC
+
     Please select one of the following game modes:
 
         #{'[1]'.green} Player vs. Player
