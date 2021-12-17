@@ -96,7 +96,7 @@ class Game
     intro_message
     loop do
       game_load = input_game_load
-      game_load == '1' ? game_setup : open_saved_file
+      return game_load == '1' ? game_setup : open_saved_file
     end
   end
 
