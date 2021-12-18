@@ -37,7 +37,12 @@ class Game
 
     begin
       input = gets.chomp.upcase
-      raise warning unless match_criteria.include?(input)
+
+      if negate_matcher
+        raise warning if match_criteria.include?(input)
+      else
+        raise warning unless match_criteria.include?(input)
+      end
 
       input
     rescue StandardError => e
