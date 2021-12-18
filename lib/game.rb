@@ -24,7 +24,6 @@ class Game
     @game_over = false
     @game_won = false
     @game_mode = game_mode
-    # @setup_complete = false
   end
 
   def self.user_input(
@@ -138,13 +137,12 @@ class Game
   end
 
   def play
-    # game_setup
     game_loop
     game_end
   end
 
   def game_loop
-    until @board.full?
+    loop do
       player_turn
       return @game_over = true if @board.game_over?
 
