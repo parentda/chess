@@ -98,9 +98,14 @@ class Game
   def self.create_game
     segment_break
     intro_message
+
     loop do
       game_load = input_game_load
-      return game_load == '1' ? game_setup : open_saved_file
+
+      return game_setup if game_load == '1'
+
+      loaded_game = open_saved_file
+      return loaded_game unless loaded_game.nil?
     end
   end
 
