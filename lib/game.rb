@@ -161,10 +161,19 @@ class Game
   end
 
   def player_turn
-    piece = Game.user_input(piece_select_prompt, Game.warning_prompt_invalid)
-    move = Game.user_input(move_select_prompt, Game.warning_prompt_invalid)
+    piece = piece_select
+    move = move_select
+
     @board.update_board(column, @current_player.marker)
     @board.display
+  end
+
+  def piece_select
+    Game.user_input(piece_select_prompt, Game.warning_prompt_invalid)
+  end
+
+  def move_select
+    Game.user_input(move_select_prompt, Game.warning_prompt_invalid)
   end
 
   def undo_turn; end
