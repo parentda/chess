@@ -161,7 +161,8 @@ class Game
   end
 
   def player_turn
-    column = player_input
+    piece = Game.user_input(piece_select_prompt, Game.warning_prompt_invalid)
+    move = Game.user_input(move_select_prompt, Game.warning_prompt_invalid)
     @board.update_board(column, @current_player.marker)
     @board.display
   end
