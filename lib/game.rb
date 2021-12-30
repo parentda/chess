@@ -183,12 +183,16 @@ class Game
     @board.display
   end
 
-  def piece_select
-    Game.user_input(piece_select_prompt, Game.warning_prompt_invalid)
+  def piece_select(piece_list)
+    Game.user_input(
+      piece_select_prompt,
+      Game.warning_prompt_invalid,
+      piece_list
+    )
   end
 
-  def move_select
-    Game.user_input(move_select_prompt, Game.warning_prompt_invalid)
+  def move_select(move_list)
+    Game.user_input(move_select_prompt, Game.warning_prompt_invalid, move_list)
   end
 
   def undo_turn; end
