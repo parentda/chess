@@ -161,10 +161,25 @@ class Game
   end
 
   def player_turn
+    display
+
     piece = piece_select
     move = move_select
 
     @board.update_board(column, @current_player.marker)
+  end
+
+  def display
+    system 'clear'
+
+    color_prompt =
+      if @current_player.color == Board::COLORS[0]
+        '  WHITE to move  '.black.on_white
+      else
+        '  BLACK to move  '.white.on_black
+      end
+
+    puts "\n\t     #{color_prompt}\n\n\n"
     @board.display
   end
 
