@@ -126,7 +126,6 @@ class Board
     output << "\t  "
     ('a'..'h').each { |letter| output << " #{letter} " }
 
-    # system 'clear'
     puts output
   end
 
