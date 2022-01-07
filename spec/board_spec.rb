@@ -25,13 +25,25 @@ describe Board do
     end
   end
 
-  describe '#convert_input' do
+  describe '#position_to_array' do
     context 'when input is valid' do
       inputs = %w[a8 A8 a1 h8 h1]
       outputs = [[2, 2], [2, 2], [9, 2], [2, 9], [9, 9]]
       it 'returns correct coordinate array' do
         inputs.each_with_index do |input, i|
-          expect(board.convert_input(input)).to eq outputs[i]
+          expect(board.position_to_array(input)).to eq outputs[i]
+        end
+      end
+    end
+  end
+
+  describe '#array_to_position' do
+    context 'when input is valid' do
+      inputs = [[2, 2], [9, 2], [2, 9], [9, 9]]
+      outputs = %w[A8 A1 H8 H1]
+      it 'returns correct coordinate array' do
+        inputs.each_with_index do |input, i|
+          expect(board.array_to_position(input)).to eq outputs[i]
         end
       end
     end
