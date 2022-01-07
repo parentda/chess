@@ -129,6 +129,10 @@ class Board
     puts output
   end
 
+  def list_pieces(color)
+    @piece_list[color].map { |piece| array_to_position(piece[:position]) }
+  end
+
   def position_to_array(string)
     row = 10 - string[1].to_i
     col = (string[0].upcase.ord - 65) + 2
