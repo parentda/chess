@@ -129,12 +129,6 @@ class Board
     puts output
   end
 
-  def valid_input?(string)
-    return false unless string.length == 2
-
-    string.match?(/[a-h][1-8]/i)
-  end
-
   def position_to_array(string)
     row = 10 - string[1].to_i
     col = (string[0].upcase.ord - 65) + 2
