@@ -145,10 +145,6 @@ class Board
     (array[1] - 2 + 65).chr.to_s + (10 - array[0]).to_s
   end
 
-  def valid_selection?(coords, valid_choice_list)
-    valid_choice_list.include?(coords)
-  end
-
   def pseudo_legal_moves(coords)
     pseudo_legal_moves_list = []
 
