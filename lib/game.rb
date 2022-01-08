@@ -166,6 +166,19 @@ class Game
     piece = piece_select
     move = move_select
 
+    case player_input
+    when 'SAVE'
+      save
+      false
+    when 'QUIT'
+      false
+    when 'UNDO'
+    else
+      evaluate_guess(player_input)
+      puts display_output
+      true
+    end
+
     @board.update_board(column, @current_player.marker)
   end
 
