@@ -165,8 +165,11 @@ class Game
 
     piece_list = @board.list_pieces(@current_player.color)
 
-    piece = piece_select
-    move = move_select
+    piece = piece_select(piece_list)
+
+    moves_list = @board.legal_moves(@board.position_to_array(piece))
+
+    move = move_select(move_list)
 
     case player_input
     when 'SAVE'
