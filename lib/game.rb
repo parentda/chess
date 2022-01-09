@@ -163,6 +163,8 @@ class Game
   def player_turn
     display
 
+    piece_list = @board.list_pieces(@current_player.color)
+
     piece = piece_select
     move = move_select
 
