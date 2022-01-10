@@ -177,7 +177,6 @@ class Game
       false
     when 'QUIT'
       false
-    when 'UNDO'
     else
       evaluate_guess(player_input)
       puts display_output
@@ -201,6 +200,7 @@ class Game
 
     puts "\n\t     #{color_prompt}\n\n\n"
     @board.display
+    puts "\n(At any time you may input [SAVE/save] to save the game, or [QUIT/quit] to exit the game)"
   end
 
   def piece_select(piece_list)
@@ -214,8 +214,6 @@ class Game
   def move_select(move_list)
     Game.user_input(move_select_prompt, Game.warning_prompt_invalid, move_list)
   end
-
-  def undo; end
 
   def switch_player
     @players.rotate!
@@ -232,7 +230,7 @@ class Game
     filename = "#{Game.user_input}.yaml"
     filepath = "#{@@saved_games_folder}/#{filename}"
     File.write(filepath, serialized_file)
-    puts save_game_message(filename)
+    save_game_message(filename)
   end
 
   def quit; end
