@@ -20,4 +20,11 @@ module InstanceDisplayable
     Please input a valid move position:
     HEREDOC
   end
+
+  def save_quit_message
+    puts <<~HEREDOC
+
+    (At any time you may input #{'[SAVE/save]'.green} to save the game, or #{'[QUIT/quit]'.green} to exit the game)
+    HEREDOC
+  end
 end
