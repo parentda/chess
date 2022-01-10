@@ -10,10 +10,10 @@ class Game
   attr_reader :players, :current_player, :game_over, :board
 
   ROWS = %w[1 2 3 4 5 6 7 8].freeze
-  COLUMNS = %w[A B C D E F G H].freeze
+  COLUMNS = %w[a b c d e f g h].freeze
   POSITIONS = COLUMNS.product(ROWS).map { |arr| arr[0] + arr[1] }.freeze
 
-  COMMANDS = %w[SAVE QUIT UNDO].freeze
+  COMMANDS = %w[save quit undo].freeze
 
   @@saved_games_folder = 'saved_games'
 
@@ -36,7 +36,7 @@ class Game
     prompt
 
     begin
-      input = gets.chomp.upcase
+      input = gets.chomp.downcase
 
       if negate_matcher
         raise warning if match_criteria.include?(input)
@@ -169,7 +169,7 @@ class Game
 
     moves_list = @board.legal_moves(@board.position_to_array(piece))
 
-    move = move_select(move_list)
+    move = move_select(moves_list)
 
     case player_input
     when 'SAVE'
@@ -185,6 +185,8 @@ class Game
     end
 
     @board.update_board(column, @current_player.marker)
+
+    @game_over = @board.check_game_over
   end
 
   def display
@@ -213,7 +215,7 @@ class Game
     Game.user_input(move_select_prompt, Game.warning_prompt_invalid, move_list)
   end
 
-  def undo_turn; end
+  def undo; end
 
   def switch_player
     @players.rotate!
@@ -232,6 +234,8 @@ class Game
     File.write(filepath, serialized_file)
     puts save_game_message(filename)
   end
+
+  def quit; end
 
   def serialize
     YAML.dump(self)
