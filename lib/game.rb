@@ -198,9 +198,10 @@ class Game
         '  BLACK to move  '.white.on_black
       end
 
-    puts "\n\t     #{color_prompt}\n\n\n"
+    save_quit_message
+    coordinate_format_message
+    color_prompt_message(color_prompt)
     @board.display
-    puts "\n(At any time you may input [SAVE/save] to save the game, or [QUIT/quit] to exit the game)"
   end
 
   def piece_select(piece_list)
