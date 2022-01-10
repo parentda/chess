@@ -32,7 +32,15 @@ module InstanceDisplayable
     puts <<~HEREDOC
 
     Piece/Move coordinates are of the format #{'[a1]'.blue}/#{'[A1]'.blue} (case insensitive)
-    
+
+    HEREDOC
+  end
+
+  def color_prompt_message(color_prompt)
+    puts <<-HEREDOC
+
+             #{color_prompt}
+
     HEREDOC
   end
 end
