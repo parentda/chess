@@ -135,12 +135,12 @@ class Board
 
   def position_to_array(string)
     row = 10 - string[1].to_i
-    col = (string[0].upcase.ord - 65) + 2
+    col = (string[0].upcase.ord - 97) + 2
     [row, col]
   end
 
   def array_to_position(array)
-    (array[1] - 2 + 65).chr.to_s + (10 - array[0]).to_s
+    (array[1] - 2 + 97).chr.to_s + (10 - array[0]).to_s
   end
 
   def pseudo_legal_moves(coords)
