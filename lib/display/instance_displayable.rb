@@ -27,4 +27,12 @@ module InstanceDisplayable
     (At any time you may input #{'[SAVE/save]'.green} to save the game, or #{'[QUIT/quit]'.green} to exit the game)
     HEREDOC
   end
+
+  def coordinate_format_message
+    puts <<~HEREDOC
+
+    Piece/Move coordinates are of the format #{'[a1]'.blue}/#{'[A1]'.blue} (case insensitive)
+    
+    HEREDOC
+  end
 end
