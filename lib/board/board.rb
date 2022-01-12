@@ -129,8 +129,13 @@ class Board
     puts output
   end
 
-  def list_pieces(color)
-    @piece_list[color].map { |piece| array_to_position(piece[:position]) }
+  def legal_pieces(color)
+    @piece_list[color].reduce([]) do |piece_list, piece|
+      unless legal_moves(piece[:position]).empty?
+        piece_list << array_to_position(piece[:position])
+      end
+      piece_list
+    end
   end
 
   def position_to_array(string)
