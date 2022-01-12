@@ -9,22 +9,6 @@ describe Board do
   #   allow(board).to receive(:add_sentinels)
   # end
 
-  describe '#valid_input?' do
-    context 'when given a valid input' do
-      inputs = %w[a1 A1 h8 H8]
-      it 'returns true' do
-        inputs.each { |input| expect(board.valid_input?(input)).to be true }
-      end
-    end
-
-    context 'when given an invalid input' do
-      inputs = %w[a0 A9 i8 I8 a11 Aa1 1a 12a aa 11]
-      it 'returns false' do
-        inputs.each { |input| expect(board.valid_input?(input)).to be false }
-      end
-    end
-  end
-
   describe '#position_to_array' do
     context 'when input is valid' do
       inputs = %w[a8 A8 a1 h8 h1]
