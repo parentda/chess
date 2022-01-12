@@ -163,13 +163,20 @@ class Game
   def player_turn
     display
 
-    piece_list = @board.list_pieces(@current_player.color)
+    legal_piece_list = @board.legal_pieces(@current_player.color)
 
-    piece = piece_select(piece_list)
+    puts "Piece List: #{legal_piece_list}"
+
+    piece = piece_select(legal_piece_list)
 
     moves_list = @board.legal_moves(@board.position_to_array(piece))
 
-    move = move_select(moves_list)
+    display(@board.position_to_array(piece), moves_list)
+    puts "Piece: #{piece}"
+    puts "Moves List: #{moves_list}"
+
+    move =
+      move_select(moves_list.map { |coord| @board.array_to_position(coord) })
 
     case player_input
     when 'SAVE'
@@ -188,7 +195,7 @@ class Game
     @game_over = @board.check_game_over
   end
 
-  def display
+  def display(selected_coords = nil, moves_list = nil)
     system 'clear'
 
     color_prompt =
@@ -201,7 +208,7 @@ class Game
     save_quit_message
     coordinate_format_message
     color_prompt_message(color_prompt)
-    @board.display
+    @board.display(selected_coords, moves_list)
   end
 
   def piece_select(piece_list)
