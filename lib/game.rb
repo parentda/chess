@@ -13,7 +13,7 @@ class Game
   COLUMNS = %w[a b c d e f g h].freeze
   POSITIONS = COLUMNS.product(ROWS).map { |arr| arr[0] + arr[1] }.freeze
 
-  COMMANDS = %w[save quit undo].freeze
+  COMMANDS = %w[save quit].freeze
 
   @@saved_games_folder = 'saved_games'
 
@@ -178,21 +178,22 @@ class Game
     move =
       move_select(moves_list.map { |coord| @board.array_to_position(coord) })
 
-    case player_input
-    when 'SAVE'
-      save
-      false
-    when 'QUIT'
-      false
-    else
-      evaluate_guess(player_input)
-      puts display_output
-      true
-    end
+    # case player_input
+    # when 'save'
+    #   save
+    #   false
+    # when 'quit'
+    #   quit
+    #   false
+    # else
+    #   evaluate_guess(player_input)
+    #   puts display_output
+    #   true
+    # end
 
-    @board.update_board(column, @current_player.marker)
+    # @board.update_board(column, @current_player.marker)
 
-    @game_over = @board.check_game_over
+    # @game_over = @board.check_game_over
   end
 
   def display(selected_coords = nil, moves_list = nil)
@@ -245,5 +246,15 @@ class Game
 
   def serialize
     YAML.dump(self)
+  end
+
+  def position_to_array(string)
+    row = 10 - string[1].to_i
+    col = (string[0].downcase.ord - 97) + 2
+    [row, col]
+  end
+
+  def array_to_position(array)
+    (array[1] - 2 + 97).chr.to_s + (10 - array[0]).to_s
   end
 end
