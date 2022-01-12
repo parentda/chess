@@ -7,7 +7,7 @@ class Game
   include InstanceDisplayable
   extend ClassDisplayable
 
-  attr_reader :players, :current_player, :game_over, :board
+  attr_reader :players, :game_over, :board
 
   ROWS = %w[1 2 3 4 5 6 7 8].freeze
   COLUMNS = %w[a b c d e f g h].freeze
@@ -20,7 +20,6 @@ class Game
   def initialize(game_mode, players)
     @board = Board.new
     @players = players
-    @current_player = @players.first
     @game_over = false
     @game_mode = game_mode
   end
@@ -161,7 +160,7 @@ class Game
   def player_turn
     display
 
-    legal_piece_list = @board.legal_pieces(@current_player.color)
+    legal_piece_list = @board.legal_pieces(@players.first.color)
 
     puts "Piece List: #{legal_piece_list}"
 
@@ -189,7 +188,7 @@ class Game
     #   true
     # end
 
-    # @board.update_board(column, @current_player.marker)
+    # @board.update_board(column, @players.first.marker)
 
     @game_over = @board.check_game_over
   end
@@ -198,7 +197,7 @@ class Game
     system 'clear'
 
     color_prompt =
-      if @current_player.color == Board::COLORS[0]
+      if @players.first.color == Board::COLORS[0]
         '  WHITE to move  '.black.on_white
       else
         '  BLACK to move  '.white.on_black
@@ -211,7 +210,7 @@ class Game
   end
 
   def piece_select(piece_list)
-    if @current_player.is_a?(Human)
+    if @players.first.is_a?(Human)
       Game.user_input(
         piece_select_prompt,
         Game.warning_prompt_invalid,
@@ -223,7 +222,7 @@ class Game
   end
 
   def move_select(move_list)
-    if @current_player.is_a?(Human)
+    if @players.first.is_a?(Human)
       Game.user_input(
         move_select_prompt,
         Game.warning_prompt_invalid,
@@ -236,7 +235,6 @@ class Game
 
   def switch_player
     @players.rotate!
-    @current_player = @players.first
   end
 
   def game_end
