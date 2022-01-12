@@ -213,15 +213,27 @@ class Game
   end
 
   def piece_select(piece_list)
-    Game.user_input(
-      piece_select_prompt,
-      Game.warning_prompt_invalid,
-      piece_list
-    )
+    if @current_player.is_a?(Human)
+      Game.user_input(
+        piece_select_prompt,
+        Game.warning_prompt_invalid,
+        piece_list
+      )
+    else
+      if @current_player.is_a?(Human)
+    end
   end
 
   def move_select(move_list)
-    Game.user_input(move_select_prompt, Game.warning_prompt_invalid, move_list)
+    if @current_player.is_a?(Human)
+      Game.user_input(
+        move_select_prompt,
+        Game.warning_prompt_invalid,
+        move_list
+      )
+    else
+
+    end
   end
 
   def switch_player
