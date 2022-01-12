@@ -22,7 +22,6 @@ class Game
     @players = players
     @current_player = @players.first
     @game_over = false
-    @game_won = false
     @game_mode = game_mode
   end
 
@@ -152,9 +151,8 @@ class Game
   end
 
   def game_loop
-    loop do
-      player_turn
-      return @game_over = true if @board.game_over?
+    while player_turn
+      return if @game_over
 
       switch_player
     end
@@ -193,7 +191,7 @@ class Game
 
     # @board.update_board(column, @current_player.marker)
 
-    # @game_over = @board.check_game_over
+    @game_over = @board.check_game_over
   end
 
   def display(selected_coords = nil, moves_list = nil)
@@ -242,7 +240,16 @@ class Game
   end
 
   def game_end
-    @game_won ? win_prompt(@current_player) : tie_prompt
+    case @game_over
+    when :checkmate
+      checkmate_message
+    when :stalemate
+      stalemate_messsage
+    else
+      resign_message
+    end
+
+    close_message
   end
 
   def save
