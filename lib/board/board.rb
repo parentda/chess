@@ -132,7 +132,7 @@ class Board
   def legal_pieces(color)
     @piece_list[color].reduce([]) do |piece_list, piece|
       unless legal_moves(piece[:position]).empty?
-        piece_list << array_to_position(piece[:position])
+        piece_list << (piece[:position])
       end
       piece_list
     end
@@ -341,6 +341,16 @@ class Board
 
     PIECE_TYPES.any? do |piece_type|
       attacked_by?(king_position, piece_type, attacking_color, defending_color)
+    end
+  end
+
+  def check_game_over(attacking_color, defending_color)
+    if check?(attacking_color, defending_color)
+      :checkmate
+    elsif stalemate?(attacking_color, defending_color)
+      :stalemate
+    else
+      false
     end
   end
 
