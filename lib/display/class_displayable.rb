@@ -26,12 +26,13 @@ module ClassDisplayable
 
   def display_saved_games(hash)
     output = ''
-    hash.each { |key, value| output += "#{key.to_s.blue}:  #{value}\n" }
+    hash.each do |key, value|
+      output += "\n    #{'['.blue}#{key.to_s.blue}#{']'.blue}  #{value}"
+    end
 
     puts <<~HEREDOC
 
     Saved Games:
-    
     #{output}
     HEREDOC
   end
@@ -41,6 +42,8 @@ module ClassDisplayable
 
     Starting new game...
     HEREDOC
+
+    sleep(1)
   end
 
   def load_game_message(filename)
@@ -48,6 +51,8 @@ module ClassDisplayable
 
     Loading #{filename}...
     HEREDOC
+
+    sleep(1)
   end
 
   def saved_game_prompt
