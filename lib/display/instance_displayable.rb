@@ -40,7 +40,11 @@ module InstanceDisplayable
     puts <<-HEREDOC
 
              #{color_prompt}
-
+             
     HEREDOC
+  end
+
+  def warning_prompt_invalid
+    'Sorry, that input is invalid. Please try again.'.red
   end
 end
