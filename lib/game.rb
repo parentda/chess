@@ -78,7 +78,12 @@ class Game
   end
 
   def self.get_file_num(games_list)
-    user_input(saved_game_prompt, warning_prompt_invalid, games_list.keys).to_i
+    print games_list.keys
+    user_input(
+      saved_game_prompt,
+      warning_prompt_invalid,
+      games_list.keys.map(&:to_s)
+    ).to_i
   end
 
   def self.input_game_load
@@ -150,7 +155,8 @@ class Game
   end
 
   def game_loop
-    while player_turn
+    loop do
+      player_turn
       return if @game_over
 
       switch_player
@@ -166,6 +172,8 @@ class Game
 
     piece = piece_select(legal_piece_list)
 
+    return @game_over = :resign if piece == 'quit'
+
     moves_list = @board.legal_moves(@board.position_to_array(piece))
 
     display(@board.position_to_array(piece), moves_list)
@@ -174,6 +182,8 @@ class Game
 
     move =
       move_select(moves_list.map { |coord| @board.array_to_position(coord) })
+
+    return @game_over = :resign if move == 'quit'
 
     # case player_input
     # when 'save'
@@ -214,7 +224,7 @@ class Game
       Game.user_input(
         piece_select_prompt,
         Game.warning_prompt_invalid,
-        piece_list
+        piece_list + COMMANDS
       )
     else
       piece_list.sample
@@ -226,7 +236,7 @@ class Game
       Game.user_input(
         move_select_prompt,
         Game.warning_prompt_invalid,
-        move_list
+        move_list + COMMANDS
       )
     else
       move_list.sample
@@ -247,13 +257,14 @@ class Game
       resign_message
     end
 
-    close_message
+    # close_message
   end
 
   def save
     serialized_file = serialize
     Dir.mkdir(@@saved_games_folder) unless Dir.exist?(@@saved_games_folder)
-    filename = "#{Game.user_input}.yaml"
+    filename =
+      "#{Game.user_input(save_game_prompt, warning_prompt_invalid, [], true)}.yaml"
     filepath = "#{@@saved_games_folder}/#{filename}"
     File.write(filepath, serialized_file)
     save_game_message(filename)
