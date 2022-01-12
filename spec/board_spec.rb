@@ -24,7 +24,7 @@ describe Board do
   describe '#array_to_position' do
     context 'when input is valid' do
       inputs = [[2, 2], [9, 2], [2, 9], [9, 9]]
-      outputs = %w[A8 A1 H8 H1]
+      outputs = %w[a8 a1 h8 h1]
       it 'returns correct coordinate array' do
         inputs.each_with_index do |input, i|
           expect(board.array_to_position(input)).to eq outputs[i]
