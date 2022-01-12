@@ -220,7 +220,7 @@ class Game
         piece_list
       )
     else
-      if @current_player.is_a?(Human)
+      piece_list.sample
     end
   end
 
@@ -232,7 +232,7 @@ class Game
         move_list
       )
     else
-
+      move_list.sample
     end
   end
 
