@@ -135,7 +135,7 @@ class Board
 
   def position_to_array(string)
     row = 10 - string[1].to_i
-    col = (string[0].upcase.ord - 97) + 2
+    col = (string[0].downcase.ord - 97) + 2
     [row, col]
   end
 
