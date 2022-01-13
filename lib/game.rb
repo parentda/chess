@@ -55,7 +55,7 @@ class Game
 
     display_saved_files(saved_games)
     file_num = get_file_num(saved_games)
-    load_game_prompt(saved_games[file_num])
+    load_game_message(saved_games[file_num])
     load_saved_file("#{@@saved_games_folder}/#{saved_games[file_num]}")
   end
 
@@ -78,7 +78,6 @@ class Game
   end
 
   def self.get_file_num(games_list)
-    print games_list.keys
     user_input(
       saved_game_prompt,
       warning_prompt_invalid,
@@ -165,7 +164,6 @@ class Game
 
   def player_turn
     display
-
     legal_piece_list = @board.legal_pieces(@players.first.color)
 
     puts "Piece List: #{legal_piece_list}"
@@ -221,11 +219,17 @@ class Game
 
   def piece_select(piece_list)
     if @players.first.is_a?(Human)
-      Game.user_input(
-        piece_select_prompt,
-        Game.warning_prompt_invalid,
-        piece_list + COMMANDS
-      )
+      loop do
+        input =
+          Game.user_input(
+            piece_select_prompt,
+            Game.warning_prompt_invalid,
+            piece_list + COMMANDS
+          )
+        return input unless input == 'save'
+
+        save
+      end
     else
       piece_list.sample
     end
