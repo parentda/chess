@@ -164,41 +164,37 @@ class Game
 
   def player_turn
     display
-    legal_piece_list = @board.legal_pieces(@players.first.color)
+
+    legal_piece_list =
+      @board
+        .legal_pieces(@players.first.color)
+        .map { |coord| array_to_position(coord) }
 
     puts "Piece List: #{legal_piece_list}"
 
-    piece = piece_select(legal_piece_list)
-
+    piece = turn_input(:piece_select_prompt, legal_piece_list)
     return @game_over = :resign if piece == 'quit'
 
-    moves_list = @board.legal_moves(@board.position_to_array(piece))
+    moves_list = @board.legal_moves(position_to_array(piece))
 
-    display(@board.position_to_array(piece), moves_list)
+    display(position_to_array(piece), moves_list)
     puts "Piece: #{piece}"
     puts "Moves List: #{moves_list}"
 
     move =
-      move_select(moves_list.map { |coord| @board.array_to_position(coord) })
+      turn_input(
+        :piece_select_prompt,
+        moves_list.map { |coord| array_to_position(coord) }
+      )
 
     return @game_over = :resign if move == 'quit'
 
-    # case player_input
-    # when 'save'
-    #   save
-    #   false
-    # when 'quit'
-    #   quit
-    #   false
-    # else
-    #   evaluate_guess(player_input)
-    #   puts display_output
-    #   true
-    # end
+    @board.make_move
 
-    # @board.update_board(column, @players.first.marker)
+    display
 
-    @game_over = @board.check_game_over
+    @game_over =
+      @board.check_game_over(@players.first.color, players.last.color)
   end
 
   def display(selected_coords = nil, moves_list = nil)
@@ -217,38 +213,21 @@ class Game
     @board.display(selected_coords, moves_list)
   end
 
-  def piece_select(piece_list)
+  def turn_input(prompt, match_list)
     if @players.first.is_a?(Human)
       loop do
         input =
           Game.user_input(
-            piece_select_prompt,
+            method(prompt).call,
             Game.warning_prompt_invalid,
-            piece_list + COMMANDS
+            match_list + COMMANDS
           )
         return input unless input == 'save'
 
         save
       end
     else
-      piece_list.sample
-    end
-  end
-
-  def move_select(move_list)
-    if @players.first.is_a?(Human)
-      loop do
-        Game.user_input(
-          move_select_prompt,
-          Game.warning_prompt_invalid,
-          move_list + COMMANDS
-        )
-        return input unless input == 'save'
-
-        save
-      end
-    else
-      move_list.sample
+      match_list.sample
     end
   end
 
