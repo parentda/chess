@@ -22,6 +22,8 @@ class Game
     @players = players
     @game_over = false
     @game_mode = game_mode
+    @turns = 0
+    @turn_limit = 300
   end
 
   def self.user_input(
@@ -156,7 +158,8 @@ class Game
   def game_loop
     loop do
       player_turn
-      return if @game_over
+      @turns += 1
+      return if @game_over || @turns >= @turn_limit
 
       switch_player
     end
@@ -170,19 +173,24 @@ class Game
         .legal_pieces(@players.first.color)
         .map { |coord| array_to_position(coord) }
 
-    puts "Piece List: #{legal_piece_list}"
+    # puts "Piece List: #{legal_piece_list}"
+    # puts "Pieces: #{@board.piece_list[@players.first.color]}"
+
+    # puts "All possible moves: #{@board.all_possible_moves}"
 
     position = turn_input(:piece_select_prompt, legal_piece_list)
     return @game_over = :resign if position == 'quit'
 
     coords = position_to_array(position)
     piece = @board.positions[coords[0]][coords[1]].occupant
-    puts "Piece: #{piece}"
+
+    # puts "Piece: #{piece}"
     moves_list = @board.legal_moves(coords)
 
     display(coords, moves_list)
-    puts "Piece: #{position}"
-    puts "Moves List: #{moves_list}"
+
+    # puts "Piece: #{position}"
+    # puts "Moves List: #{moves_list}"
 
     move =
       turn_input(
@@ -195,14 +203,31 @@ class Game
       moves_list.select { |coord| coord.first(2) == position_to_array(move) }
         .first
 
-    puts "Move Coords: #{move_coords}"
+    # puts "Move Coords: #{move_coords}"
 
     @board.make_move(piece, coords, move_coords.first(2), move_coords[2])
 
     display
 
+    if @board.promote_available?
+      if @players.first.is_a?(Human)
+        promotion_choice =
+          Game.user_input(
+            promotion_prompt,
+            Game.warning_prompt_invalid,
+            %w[1 2 3 4]
+          )
+        @board.promote(promotion_choice)
+      else
+        @board.promote(1)
+      end
+      display
+    end
+
     @game_over =
       @board.check_game_over(@players.first.color, players.last.color)
+    puts "Game Over: #{@game_over}"
+    puts "Turns: #{@turns}"
   end
 
   def display(selected_coords = nil, moves_list = nil)
@@ -210,9 +235,9 @@ class Game
 
     color_prompt =
       if @players.first.color == Board::COLORS[0]
-        '  WHITE to move  '.black.on_white
+        "  WHITE's move  ".black.on_white
       else
-        '  BLACK to move  '.white.on_black
+        "  BLACK's move  ".white.on_black
       end
 
     save_quit_message
