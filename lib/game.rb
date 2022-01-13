@@ -133,9 +133,9 @@ class Game
     when '2'
       [Human.new(Board::COLORS[0]), Computer.new(Board::COLORS[1])]
     when '3'
-      [Computer.new(Board::COLORS[0]), Human.new(Board::COLORS[1])]
-    when '4'
       [Computer.new(Board::COLORS[0]), Computer.new(Board::COLORS[1])]
+    when '4'
+      [Computer.new(Board::COLORS[0]), Human.new(Board::COLORS[1])]
     end
   end
 
@@ -172,13 +172,16 @@ class Game
 
     puts "Piece List: #{legal_piece_list}"
 
-    piece = turn_input(:piece_select_prompt, legal_piece_list)
-    return @game_over = :resign if piece == 'quit'
+    position = turn_input(:piece_select_prompt, legal_piece_list)
+    return @game_over = :resign if position == 'quit'
 
-    moves_list = @board.legal_moves(position_to_array(piece))
-
-    display(position_to_array(piece), moves_list)
+    coords = position_to_array(position)
+    piece = @board.positions[coords[0]][coords[1]].occupant
     puts "Piece: #{piece}"
+    moves_list = @board.legal_moves(coords)
+
+    display(coords, moves_list)
+    puts "Piece: #{position}"
     puts "Moves List: #{moves_list}"
 
     move =
@@ -186,10 +189,15 @@ class Game
         :piece_select_prompt,
         moves_list.map { |coord| array_to_position(coord) }
       )
-
     return @game_over = :resign if move == 'quit'
 
-    @board.make_move
+    move_coords =
+      moves_list.select { |coord| coord.first(2) == position_to_array(move) }
+        .first
+
+    puts "Move Coords: #{move_coords}"
+
+    @board.make_move(piece, coords, move_coords.first(2), move_coords[2])
 
     display
 
