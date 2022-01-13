@@ -237,11 +237,16 @@ class Game
 
   def move_select(move_list)
     if @players.first.is_a?(Human)
-      Game.user_input(
-        move_select_prompt,
-        Game.warning_prompt_invalid,
-        move_list + COMMANDS
-      )
+      loop do
+        Game.user_input(
+          move_select_prompt,
+          Game.warning_prompt_invalid,
+          move_list + COMMANDS
+        )
+        return input unless input == 'save'
+
+        save
+      end
     else
       move_list.sample
     end
