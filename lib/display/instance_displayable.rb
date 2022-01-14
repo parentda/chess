@@ -95,6 +95,15 @@ module InstanceDisplayable
     HEREDOC
   end
 
+  def draw_message(turn_limit)
+    puts <<~HEREDOC
+    
+    DRAW!
+
+    The turn limit of #{turn_limit} has elapsed with no winner.
+    HEREDOC
+  end
+
   def warning_prompt_invalid
     'Sorry, that input is invalid. Please try again.'.red
   end
