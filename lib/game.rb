@@ -100,7 +100,8 @@ class Game
   end
 
   def self.create_game
-    segment_break
+    system 'clear'
+
     intro_message
 
     loop do
@@ -158,8 +159,7 @@ class Game
   def game_loop
     loop do
       player_turn
-      @turns += 1
-      return if @game_over || @turns >= @turn_limit
+      return if @game_over
 
       switch_player
     end
@@ -216,7 +216,7 @@ class Game
             promotion_prompt,
             Game.warning_prompt_invalid,
             %w[1 2 3 4]
-          )
+          ).to_i
         @board.promote(promotion_choice)
       else
         @board.promote(1)
@@ -224,10 +224,14 @@ class Game
       display
     end
 
+    @turns += 1
+
     @game_over =
       @board.check_game_over(@players.first.color, players.last.color)
     puts "Game Over: #{@game_over}"
     puts "Turns: #{@turns}"
+
+    @game_over = :draw if @turns >= @turn_limit
   end
 
   def display(selected_coords = nil, moves_list = nil)
@@ -271,9 +275,11 @@ class Game
   def game_end
     case @game_over
     when :checkmate
-      checkmate_message
+      checkmate_message(@players.first.color)
     when :stalemate
       stalemate_messsage
+    when :draw
+      draw_message
     else
       resign_message
     end
