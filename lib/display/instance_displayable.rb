@@ -77,6 +77,24 @@ module InstanceDisplayable
     HEREDOC
   end
 
+  def stalemate_message(defending_color)
+    color =
+      if defending_color == :white
+        ' White '.black.on_white
+      else
+        ' Black '.white.on_black
+      end
+
+    puts <<~HEREDOC
+
+    STALEMATE! 
+    
+    #{color} is not in check, but has no legal moves.
+
+    Therefore, the game is a draw!
+    HEREDOC
+  end
+
   def warning_prompt_invalid
     'Sorry, that input is invalid. Please try again.'.red
   end
