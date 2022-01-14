@@ -277,11 +277,11 @@ class Game
     when :checkmate
       checkmate_message(@players.first.color)
     when :stalemate
-      stalemate_messsage
+      stalemate_message(@players.last.color)
     when :draw
-      draw_message
+      draw_message(turn_limit)
     else
-      resign_message
+      resign_message(@players.first.color, @players.last.color)
     end
 
     # close_message
