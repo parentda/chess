@@ -61,6 +61,22 @@ module InstanceDisplayable
     HEREDOC
   end
 
+  def checkmate_message(attacking_color)
+    color =
+      if attacking_color == :white
+        ' White '.black.on_white
+      else
+        ' Black '.white.on_black
+      end
+
+    puts <<~HEREDOC
+
+    CHECKMATE! 
+    
+    #{color} is the winner!
+    HEREDOC
+  end
+
   def warning_prompt_invalid
     'Sorry, that input is invalid. Please try again.'.red
   end
