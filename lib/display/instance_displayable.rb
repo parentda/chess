@@ -64,9 +64,9 @@ module InstanceDisplayable
   def checkmate_message(attacking_color)
     color =
       if attacking_color == :white
-        ' White '.black.on_white
+        ' WHITE '.black.on_white
       else
-        ' Black '.white.on_black
+        ' BLACK '.white.on_black
       end
 
     puts <<~HEREDOC
@@ -80,9 +80,9 @@ module InstanceDisplayable
   def stalemate_message(defending_color)
     color =
       if defending_color == :white
-        ' White '.black.on_white
+        ' WHITE '.black.on_white
       else
-        ' Black '.white.on_black
+        ' BLACK '.white.on_black
       end
 
     puts <<~HEREDOC
@@ -101,6 +101,21 @@ module InstanceDisplayable
     DRAW!
 
     The turn limit of #{turn_limit} has elapsed with no winner.
+    HEREDOC
+  end
+
+  def resign_message(attacking_color)
+    if attacking_color == :white
+      win_color = ' BLACK '.white.on_black
+      lose_color = ' WHITE '.black.on_white
+    else
+      win_color = ' WHITE '.black.on_white
+      lose_color = ' BLACK '.white.on_black
+    end
+
+    puts <<~HEREDOC
+    
+    #{win_color} wins due to #{lose_color} resigning!
     HEREDOC
   end
 
