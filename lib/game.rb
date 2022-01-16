@@ -279,12 +279,10 @@ class Game
     when :stalemate
       stalemate_message(@players.last.color)
     when :draw
-      draw_message(turn_limit)
+      draw_message(@turn_limit)
     else
-      resign_message(@players.first.color, @players.last.color)
+      resign_message(@players.first.color)
     end
-
-    # close_message
   end
 
   def save
