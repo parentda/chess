@@ -36,7 +36,6 @@ module InstanceDisplayable
     puts <<~HEREDOC
 
     Piece/Move coordinates are of the format #{'[a1]'.blue}/#{'[A1]'.blue} (case insensitive)
-
     HEREDOC
   end
 
@@ -116,6 +115,13 @@ module InstanceDisplayable
     puts <<~HEREDOC
     
     #{win_color} wins due to #{lose_color} resigning!
+    HEREDOC
+  end
+
+  def elapsed_turns_message(turns)
+    puts <<~HEREDOC
+    
+    Elapsed Turns: #{turns}
     HEREDOC
   end
 
