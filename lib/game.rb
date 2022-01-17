@@ -23,7 +23,7 @@ class Game
     @game_over = false
     @game_mode = game_mode
     @turns = 0
-    @turn_limit = 300
+    @turn_limit = 5
   end
 
   def self.user_input(
@@ -207,6 +207,8 @@ class Game
 
     @board.make_move(piece, coords, move_coords.first(2), move_coords[2])
 
+    @turns += 1
+
     display
 
     if @board.promote_available?
@@ -223,8 +225,6 @@ class Game
       end
       display
     end
-
-    @turns += 1
 
     @game_over =
       @board.check_game_over(@players.first.color, players.last.color)
@@ -246,6 +246,8 @@ class Game
 
     save_quit_message
     coordinate_format_message
+    segment_break
+    elapsed_turns_message(@turns)
     color_prompt_message(color_prompt)
     @board.display(selected_coords, moves_list)
   end
