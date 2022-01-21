@@ -60,6 +60,19 @@ module InstanceDisplayable
     HEREDOC
   end
 
+  def check_message(defending_color)
+    color =
+      if defending_color == :white
+        ' WHITE '.black.on_white
+      else
+        ' BLACK '.white.on_black
+      end
+
+    puts <<~HEREDOC
+    #{color} is in CHECK!
+    HEREDOC
+  end
+
   def checkmate_message(attacking_color)
     color =
       if attacking_color == :white
