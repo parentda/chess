@@ -141,7 +141,12 @@ class Board
   def pseudo_legal_moves(coords)
     pseudo_legal_moves_list = []
 
+    # puts "Coords: #{coords}"
+
     piece = @positions[coords[0]][coords[1]].occupant
+
+    # puts "Board: #{@positions}"
+    # puts "Piece: #{piece.inspect}"
     piece_type = piece.class
     piece_color = piece.color
 
@@ -254,7 +259,10 @@ class Board
   end
 
   def update_piece_list(move, direction)
+    # puts "Move: #{move}"
     piece = move[:piece]
+
+    # puts "Piece: #{piece}"
     start_position = move[:start_position]
     end_position = move[:end_position]
     color = piece.color
@@ -345,7 +353,7 @@ class Board
   end
 
   def check_game_over(attacking_color, defending_color)
-    if check?(attacking_color, defending_color)
+    if mate?(attacking_color, defending_color)
       :checkmate
     elsif stalemate?(attacking_color, defending_color)
       :stalemate
@@ -565,16 +573,49 @@ class Board
     start = Time.now
     @piece_list.each_value do |list|
       list.each do |piece|
-        # p "Piece: #{piece}
+        p "Piece: #{piece}"
 
         # p "Pseudo-legal moves: #{pseudo_moves}"
-        legal_moves = legal_moves(piece[:position])
-        p "Legal moves: #{legal_moves}"
+        legal_moves_list = legal_moves(piece[:position])
+        p "Legal moves: #{legal_moves_list}"
       end
     end
     fin = Time.now
     time = fin - start
     puts time
+  end
+
+  def check_piece_discrepancy
+    positions_hash = {}
+
+    @positions.each_with_index do |arr, row|
+      arr.each_with_index do |position, col|
+        if position.is_a?(Square) && position.occupant.is_a?(Piece)
+          positions_hash[[row, col]] = position.occupant
+        end
+      end
+    end
+
+    piece_list_hash = {}
+
+    @piece_list.each_value do |arr|
+      arr.each { |hash| piece_list_hash[hash[:position]] = hash[:piece] }
+    end
+
+    puts <<~HEREDOC if positions_hash.length != piece_list_hash.length
+      
+      Positions Hash Length: #{positions_hash.length}
+      Piece List Length: #{piece_list_hash.length}
+      HEREDOC
+
+    same_length = positions_hash.length == piece_list_hash.length
+    same_list = true
+
+    positions_hash.each do |position, piece|
+      same_list = false if piece_list_hash[position] != piece
+    end
+
+    same_length && same_list
   end
 end
 

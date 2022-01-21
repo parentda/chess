@@ -26,13 +26,7 @@ class Game
     @turn_limit = 300
   end
 
-  def self.user_input(
-    prompt,
-    warning,
-    match_criteria,
-    negate_matcher = false,
-    input_modifier = nil
-  )
+  def self.user_input(prompt, warning, match_criteria, negate_matcher = false)
     prompt
 
     begin
@@ -235,6 +229,8 @@ class Game
     # puts "Turns: #{@turns}"
 
     @game_over = :draw if @turns >= @turn_limit
+
+    raise StandardError.new('ERROR') unless @board.check_piece_discrepancy
   end
 
   def display(check_status, selected_coords = nil, moves_list = nil)
@@ -263,7 +259,7 @@ class Game
         save
       end
     else
-      sleep(1)
+      # sleep(0.7)
       match_list.sample
     end
   end
