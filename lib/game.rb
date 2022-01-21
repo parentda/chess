@@ -23,7 +23,7 @@ class Game
     @game_over = false
     @game_mode = game_mode
     @turns = 0
-    @turn_limit = 5
+    @turn_limit = 300
   end
 
   def self.user_input(
@@ -166,7 +166,9 @@ class Game
   end
 
   def player_turn
-    display
+    check_status = @board.check?(@players.last.color, @players.first.color)
+
+    display(check_status)
 
     legal_piece_list =
       @board
@@ -187,7 +189,7 @@ class Game
     # puts "Piece: #{piece}"
     moves_list = @board.legal_moves(coords)
 
-    display(coords, moves_list)
+    display(check_status, coords, moves_list)
 
     # puts "Piece: #{position}"
     # puts "Moves List: #{moves_list}"
@@ -209,7 +211,7 @@ class Game
 
     @turns += 1
 
-    display
+    display(check_status)
 
     if @board.promote_available?
       if @players.first.is_a?(Human)
@@ -223,7 +225,7 @@ class Game
       else
         @board.promote(1)
       end
-      display
+      display(check_status)
     end
 
     @game_over =
@@ -234,7 +236,7 @@ class Game
     @game_over = :draw if @turns >= @turn_limit
   end
 
-  def display(selected_coords = nil, moves_list = nil)
+  def display(check_status, selected_coords = nil, moves_list = nil)
     system 'clear'
 
     color_prompt =
@@ -250,6 +252,7 @@ class Game
     elapsed_turns_message(@turns)
     color_prompt_message(color_prompt)
     @board.display(selected_coords, moves_list)
+    check_message(@players.first.color) if check_status
   end
 
   def turn_input(prompt, match_list)
