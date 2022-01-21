@@ -39,7 +39,14 @@ module InstanceDisplayable
     HEREDOC
   end
 
-  def color_prompt_message(color_prompt)
+  def color_prompt_message(attacking_color)
+    color_prompt =
+      if attacking_color == :white
+        "  WHITE's move  ".black.on_white
+      else
+        "  BLACK's move  ".white.on_black
+      end
+
     puts <<-HEREDOC
 
               #{color_prompt}
@@ -69,6 +76,7 @@ module InstanceDisplayable
       end
 
     puts <<~HEREDOC
+
     #{color} is in CHECK!
     HEREDOC
   end

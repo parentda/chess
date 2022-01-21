@@ -240,18 +240,11 @@ class Game
   def display(check_status, selected_coords = nil, moves_list = nil)
     system 'clear'
 
-    color_prompt =
-      if @players.first.color == Board::COLORS[0]
-        "  WHITE's move  ".black.on_white
-      else
-        "  BLACK's move  ".white.on_black
-      end
-
     save_quit_message
     coordinate_format_message
     segment_break
     elapsed_turns_message(@turns)
-    color_prompt_message(color_prompt)
+    color_prompt_message(@players.first.color)
     @board.display(selected_coords, moves_list)
     check_message(@players.first.color) if check_status
   end
@@ -301,8 +294,6 @@ class Game
     File.write(filepath, serialized_file)
     save_game_message(filename)
   end
-
-  def quit; end
 
   def serialize
     YAML.dump(self)
