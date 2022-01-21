@@ -230,8 +230,9 @@ class Game
 
     @game_over =
       @board.check_game_over(@players.first.color, players.last.color)
-    puts "Game Over: #{@game_over}"
-    puts "Turns: #{@turns}"
+
+    # puts "Game Over: #{@game_over}"
+    # puts "Turns: #{@turns}"
 
     @game_over = :draw if @turns >= @turn_limit
   end
@@ -269,6 +270,7 @@ class Game
         save
       end
     else
+      sleep(1)
       match_list.sample
     end
   end
