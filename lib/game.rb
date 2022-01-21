@@ -207,6 +207,34 @@ class Game
 
     display(check_status)
 
+    promotion_availability(check_status)
+
+    @game_over =
+      @board.check_game_over(@players.first.color, players.last.color)
+
+    # puts "Game Over: #{@game_over}"
+    # puts "Turns: #{@turns}"
+
+    @game_over = :draw if @turns >= @turn_limit
+
+    unless @board.check_piece_discrepancy
+      raise Exception.new('Board positions and piece lists out of sync')
+    end
+  end
+
+  def display(check_status, selected_coords = nil, moves_list = nil)
+    system 'clear'
+
+    save_quit_message
+    coordinate_format_message
+    segment_break
+    elapsed_turns_message(@turns)
+    color_prompt_message(@players.first.color)
+    @board.display(selected_coords, moves_list)
+    check_message(@players.first.color) if check_status
+  end
+
+  def promotion_availability(check_status)
     if @board.promote_available?
       if @players.first.is_a?(Human)
         promotion_choice =
@@ -221,28 +249,6 @@ class Game
       end
       display(check_status)
     end
-
-    @game_over =
-      @board.check_game_over(@players.first.color, players.last.color)
-
-    # puts "Game Over: #{@game_over}"
-    # puts "Turns: #{@turns}"
-
-    @game_over = :draw if @turns >= @turn_limit
-
-    raise StandardError.new('ERROR') unless @board.check_piece_discrepancy
-  end
-
-  def display(check_status, selected_coords = nil, moves_list = nil)
-    system 'clear'
-
-    save_quit_message
-    coordinate_format_message
-    segment_break
-    elapsed_turns_message(@turns)
-    color_prompt_message(@players.first.color)
-    @board.display(selected_coords, moves_list)
-    check_message(@players.first.color) if check_status
   end
 
   def turn_input(prompt, match_list)
