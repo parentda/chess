@@ -254,7 +254,7 @@ class Game
         save
       end
     else
-      # sleep(0.7)
+      sleep(0.7)
       match_list.sample
     end
   end
