@@ -23,7 +23,7 @@ class Game
     @game_over = false
     @game_mode = game_mode
     @turns = 0
-    @turn_limit = 300
+    @turn_limit = 100
   end
 
   def self.user_input(prompt, warning, match_criteria, negate_matcher = false)
@@ -179,6 +179,7 @@ class Game
     @turns += 1
 
     display(check_status)
+
     promotion_availability(check_status)
     check_game_over
   end
