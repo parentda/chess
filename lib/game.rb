@@ -165,22 +165,22 @@ class Game
     display(check_status)
 
     position = position_select
-    return @game_over = :resign if position == 'quit'
+    return if @game_over
 
     coords = position_to_array(position)
-    piece = @board.positions[coords[0]][coords[1]].occupant
 
     moves_list = @board.legal_moves(coords)
 
     display(check_status, coords, moves_list)
 
     move = move_select(moves_list)
-    return @game_over = :resign if move == 'quit'
+    return if @game_over
 
     move_coords =
       moves_list.select { |coord| coord.first(2) == position_to_array(move) }
         .first
 
+    piece = @board.positions[coords[0]][coords[1]].occupant
     @board.make_move(piece, coords, move_coords.first(2), move_coords[2])
 
     @turns += 1
@@ -189,10 +189,7 @@ class Game
 
     promotion_availability(check_status)
 
-    @game_over =
-      @board.check_game_over(@players.first.color, players.last.color)
-
-    @game_over = :draw if @turns >= @turn_limit
+    check_game_over
 
     unless @board.check_piece_discrepancy
       raise StandardError.new('Board positions and piece lists out of sync')
@@ -253,6 +250,8 @@ class Game
             Game.warning_prompt_invalid,
             match_list + COMMANDS
           )
+        return @game_over = :resign if input == 'quit'
+
         return input unless input == 'save'
 
         save
@@ -261,6 +260,13 @@ class Game
       # sleep(0.7)
       match_list.sample
     end
+  end
+
+  def check_game_over
+    @game_over =
+      @board.check_game_over(@players.first.color, players.last.color)
+
+    @game_over = :draw if @turns >= @turn_limit
   end
 
   def switch_player
