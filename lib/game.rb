@@ -164,42 +164,22 @@ class Game
 
     display(check_status)
 
-    legal_piece_list =
-      @board
-        .legal_pieces(@players.first.color)
-        .map { |coord| array_to_position(coord) }
-
-    # puts "Piece List: #{legal_piece_list}"
-    # puts "Pieces: #{@board.piece_list[@players.first.color]}"
-
-    # puts "All possible moves: #{@board.all_possible_moves}"
-
-    position = turn_input(:piece_select_prompt, legal_piece_list)
+    position = position_select
     return @game_over = :resign if position == 'quit'
 
     coords = position_to_array(position)
     piece = @board.positions[coords[0]][coords[1]].occupant
 
-    # puts "Piece: #{piece}"
     moves_list = @board.legal_moves(coords)
 
     display(check_status, coords, moves_list)
 
-    # puts "Piece: #{position}"
-    # puts "Moves List: #{moves_list}"
-
-    move =
-      turn_input(
-        :piece_select_prompt,
-        moves_list.map { |coord| array_to_position(coord) }
-      )
+    move = move_select(moves_list)
     return @game_over = :resign if move == 'quit'
 
     move_coords =
       moves_list.select { |coord| coord.first(2) == position_to_array(move) }
         .first
-
-    # puts "Move Coords: #{move_coords}"
 
     @board.make_move(piece, coords, move_coords.first(2), move_coords[2])
 
@@ -212,13 +192,10 @@ class Game
     @game_over =
       @board.check_game_over(@players.first.color, players.last.color)
 
-    # puts "Game Over: #{@game_over}"
-    # puts "Turns: #{@turns}"
-
     @game_over = :draw if @turns >= @turn_limit
 
     unless @board.check_piece_discrepancy
-      raise Exception.new('Board positions and piece lists out of sync')
+      raise StandardError.new('Board positions and piece lists out of sync')
     end
   end
 
@@ -232,6 +209,22 @@ class Game
     color_prompt_message(@players.first.color)
     @board.display(selected_coords, moves_list)
     check_message(@players.first.color) if check_status
+  end
+
+  def position_select
+    legal_piece_list =
+      @board
+        .legal_pieces(@players.first.color)
+        .map { |coord| array_to_position(coord) }
+
+    turn_input(:piece_select_prompt, legal_piece_list)
+  end
+
+  def move_select(moves_list)
+    turn_input(
+      :piece_select_prompt,
+      moves_list.map { |coord| array_to_position(coord) }
+    )
   end
 
   def promotion_availability(check_status)
