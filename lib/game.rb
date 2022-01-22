@@ -168,7 +168,6 @@ class Game
     return if @game_over
 
     coords = position_to_array(position)
-
     moves_list = @board.legal_moves(coords)
 
     display(check_status, coords, moves_list)
@@ -176,24 +175,12 @@ class Game
     move = move_select(moves_list)
     return if @game_over
 
-    move_coords =
-      moves_list.select { |coord| coord.first(2) == position_to_array(move) }
-        .first
-
-    piece = @board.positions[coords[0]][coords[1]].occupant
-    @board.make_move(piece, coords, move_coords.first(2), move_coords[2])
-
+    commit_move(move, coords, moves_list)
     @turns += 1
 
     display(check_status)
-
     promotion_availability(check_status)
-
     check_game_over
-
-    unless @board.check_piece_discrepancy
-      raise StandardError.new('Board positions and piece lists out of sync')
-    end
   end
 
   def display(check_status, selected_coords = nil, moves_list = nil)
@@ -222,6 +209,15 @@ class Game
       :piece_select_prompt,
       moves_list.map { |coord| array_to_position(coord) }
     )
+  end
+
+  def commit_move(move, coords, moves_list)
+    move_coords =
+      moves_list.select { |coord| coord.first(2) == position_to_array(move) }
+        .first
+
+    piece = @board.positions[coords[0]][coords[1]].occupant
+    @board.make_move(piece, coords, move_coords.first(2), move_coords[2])
   end
 
   def promotion_availability(check_status)
@@ -267,6 +263,10 @@ class Game
       @board.check_game_over(@players.first.color, players.last.color)
 
     @game_over = :draw if @turns >= @turn_limit
+
+    unless @board.check_piece_discrepancy
+      raise StandardError.new('Board positions and piece lists out of sync')
+    end
   end
 
   def switch_player
