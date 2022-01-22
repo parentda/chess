@@ -140,13 +140,7 @@ class Board
 
   def pseudo_legal_moves(coords)
     pseudo_legal_moves_list = []
-
-    # puts "Coords: #{coords}"
-
     piece = @positions[coords[0]][coords[1]].occupant
-
-    # puts "Board: #{@positions}"
-    # puts "Piece: #{piece.inspect}"
     piece_type = piece.class
     piece_color = piece.color
 
@@ -259,10 +253,7 @@ class Board
   end
 
   def update_piece_list(move, direction)
-    # puts "Move: #{move}"
     piece = move[:piece]
-
-    # puts "Piece: #{piece}"
     start_position = move[:start_position]
     end_position = move[:end_position]
     color = piece.color
@@ -569,22 +560,6 @@ class Board
 
   ################################################################
 
-  def all_possible_moves
-    start = Time.now
-    @piece_list.each_value do |list|
-      list.each do |piece|
-        p "Piece: #{piece}"
-
-        # p "Pseudo-legal moves: #{pseudo_moves}"
-        legal_moves_list = legal_moves(piece[:position])
-        p "Legal moves: #{legal_moves_list}"
-      end
-    end
-    fin = Time.now
-    time = fin - start
-    puts time
-  end
-
   def check_piece_discrepancy
     positions_hash = {}
 
@@ -602,12 +577,6 @@ class Board
       arr.each { |hash| piece_list_hash[hash[:position]] = hash[:piece] }
     end
 
-    puts <<~HEREDOC if positions_hash.length != piece_list_hash.length
-      
-      Positions Hash Length: #{positions_hash.length}
-      Piece List Length: #{piece_list_hash.length}
-      HEREDOC
-
     same_length = positions_hash.length == piece_list_hash.length
     same_list = true
 
@@ -618,73 +587,3 @@ class Board
     same_length && same_list
   end
 end
-
-# attacking_color = COLORS.find { |color| color != defending_color }
-
-# moves_list.each do |move|
-#   @positions[move[0]][move[1]].background_color = CAPTURE_SQUARE
-# end
-
-################################################################
-
-# @board = Board.new
-# @piece = Pawn.new(:black)
-
-# @board.moves_list << {
-#   piece: @piece,
-#   start_position: [3, 6],
-#   end_position: [5, 6]
-# }
-
-# @board.positions[3][6].occupant = ' '
-# @board.positions[9][8].occupant = ' '
-# @board.positions[9][7].occupant = ' '
-# @board.positions[9][5].occupant = ' '
-# @board.positions[9][4].occupant = ' '
-# @board.positions[9][3].occupant = ' '
-# @board.positions[8][5].occupant = ' '
-# @board.positions[8][4].occupant = ' '
-# @board.positions[8][6].occupant = ' '
-# @board.positions[8][7].occupant = ' '
-# @board.positions[8][8].occupant = ' '
-# @board.positions[5][6].occupant = @piece
-# @white_pawn = Pawn.new(:white)
-# @board.positions[5][5].occupant = @white_pawn
-# @board.piece_list[:white] << { piece: @white_pawn, position: [5, 5] }
-# @board.positions[8][8].occupant = Pawn.new(:black)
-
-# # @special_moves = @board.special_movement([8, 5], @piece, Pawn)
-
-# pieces = [
-#   # [Queen, [7, 4], :black],
-#   # [Rook, [7, 6], :black]
-#   # [Queen, [4, 5], :white]
-# ]
-# pieces.each do |piece|
-#   @board.positions[piece[1][0]][piece[1][1]].occupant = piece[0].new(piece[2])
-# end
-
-# pseudo_legal_moves_list = @board.pseudo_legal_moves([5, 5])
-# p "Pseudo-legal moves: #{pseudo_legal_moves_list}"
-
-# start = Time.now
-# legal_moves_list = @board.legal_moves([5, 5])
-# fin = Time.now
-# time = fin - start
-# p "Time: #{time}"
-# p "Legal moves: #{legal_moves_list}"
-
-# # legal_moves_list.each do |move|
-# #   @board.positions[move[0]][move[1]].background_color = :on_red
-# # end
-
-# # start = Time.now
-# # @board.check?(:black, :white)
-# # fin = Time.now
-# # time = fin - start
-# # puts time
-# @board.display
-# @pawn = @board.positions[8][3].occupant
-# @board.make_move(@pawn, [8, 3], [5, 6])
-
-# @board.display
